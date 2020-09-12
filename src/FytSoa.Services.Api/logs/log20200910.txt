@@ -1,0 +1,54 @@
+2020-09-10 18:18:57.660 +08:00 [DBG] Hosting starting
+2020-09-10 18:18:58.128 +08:00 [DBG] Failed to locate the development https certificate at 'null'.
+2020-09-10 18:18:58.155 +08:00 [INF] Now listening on: http://localhost:5000
+2020-09-10 18:18:58.155 +08:00 [DBG] Loaded hosting startup assembly FytSoa.Services.Api
+2020-09-10 18:18:58.156 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2020-09-10 18:18:58.156 +08:00 [INF] Hosting environment: Development
+2020-09-10 18:18:58.156 +08:00 [INF] Content root path: /Users/apple/Documents/2020_Project/fytsoa_3.1/src/FytSoa.Services.Api
+2020-09-10 18:18:58.156 +08:00 [DBG] Hosting started
+2020-09-10 18:18:58.208 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" accepted.
+2020-09-10 18:18:58.234 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" started.
+2020-09-10 18:18:58.277 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/weatherforecast  
+2020-09-10 18:18:58.281 +08:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2020-09-10 18:18:58.300 +08:00 [DBG] No candidates found for the request path '/weatherforecast'
+2020-09-10 18:18:58.300 +08:00 [DBG] Request did not match any endpoints
+2020-09-10 18:18:58.389 +08:00 [DBG] The request path  does not match the path filter
+2020-09-10 18:18:58.410 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" completed keep alive response.
+2020-09-10 18:18:58.411 +08:00 [INF] Request finished in 138.1057ms 404 
+2020-09-10 18:18:59.499 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" accepted.
+2020-09-10 18:18:59.500 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" started.
+2020-09-10 18:18:59.505 +08:00 [DBG] Connection id "0HM2LEBN1EC4N" accepted.
+2020-09-10 18:18:59.505 +08:00 [DBG] Connection id "0HM2LEBN1EC4N" started.
+2020-09-10 18:18:59.510 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/weatherforecast  
+2020-09-10 18:18:59.511 +08:00 [DBG] No candidates found for the request path '/weatherforecast'
+2020-09-10 18:18:59.511 +08:00 [DBG] Request did not match any endpoints
+2020-09-10 18:18:59.514 +08:00 [DBG] The request path  does not match the path filter
+2020-09-10 18:18:59.515 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" completed keep alive response.
+2020-09-10 18:18:59.519 +08:00 [INF] Request finished in 8.6568ms 404 
+2020-09-10 18:19:27.902 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/test  
+2020-09-10 18:19:27.909 +08:00 [DBG] 1 candidate(s) found for the request path '/api/test'
+2020-09-10 18:19:27.912 +08:00 [DBG] Endpoint 'FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api)' with route pattern 'api/Test' is valid for the request path '/api/test'
+2020-09-10 18:19:27.913 +08:00 [DBG] Request matched endpoint 'FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api)'
+2020-09-10 18:19:27.914 +08:00 [INF] Executing endpoint 'FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api)'
+2020-09-10 18:19:27.922 +08:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexTypeModelBinderProvider"]
+2020-09-10 18:19:27.942 +08:00 [INF] Route matched with {action = "Get", controller = "Test"}. Executing controller action with signature System.Collections.Generic.IEnumerable`1[System.String] Get() on controller FytSoa.Services.Api.Controllers.TestController (FytSoa.Services.Api).
+2020-09-10 18:19:27.944 +08:00 [DBG] Execution plan of authorization filters (in the following order): ["None"]
+2020-09-10 18:19:27.945 +08:00 [DBG] Execution plan of resource filters (in the following order): ["None"]
+2020-09-10 18:19:27.945 +08:00 [DBG] Execution plan of action filters (in the following order): ["Microsoft.AspNetCore.Mvc.ModelBinding.UnsupportedContentTypeFilter (Order: -3000)"]
+2020-09-10 18:19:27.945 +08:00 [DBG] Execution plan of exception filters (in the following order): ["None"]
+2020-09-10 18:19:27.945 +08:00 [DBG] Execution plan of result filters (in the following order): ["None"]
+2020-09-10 18:19:27.946 +08:00 [DBG] Executing controller factory for controller FytSoa.Services.Api.Controllers.TestController (FytSoa.Services.Api)
+2020-09-10 18:19:27.947 +08:00 [DBG] Executed controller factory for controller FytSoa.Services.Api.Controllers.TestController (FytSoa.Services.Api)
+2020-09-10 18:19:27.952 +08:00 [INF] Executing action method FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api) - Validation state: "Valid"
+2020-09-10 18:21:09.201 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" received FIN.
+2020-09-10 18:21:09.201 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" received FIN.
+2020-09-10 18:21:09.250 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" disconnecting.
+2020-09-10 18:21:09.250 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" sending FIN because: "The client closed the connection."
+2020-09-10 18:21:09.251 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" sending FIN because: "The client closed the connection."
+2020-09-10 18:21:09.253 +08:00 [INF] Executed action method FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 101249.1539ms.
+2020-09-10 18:21:09.259 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" disconnecting.
+2020-09-10 18:21:09.260 +08:00 [DBG] Connection id "0HM2LEBN1EC4L" stopped.
+2020-09-10 18:21:09.268 +08:00 [INF] Executed action FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api) in 101322.7734ms
+2020-09-10 18:21:09.268 +08:00 [INF] Executed endpoint 'FytSoa.Services.Api.Controllers.TestController.Get (FytSoa.Services.Api)'
+2020-09-10 18:21:09.268 +08:00 [INF] Request finished in 101370.7078ms 200 application/json; charset=utf-8
+2020-09-10 18:21:09.269 +08:00 [DBG] Connection id "0HM2LEBN1EC4M" stopped.
