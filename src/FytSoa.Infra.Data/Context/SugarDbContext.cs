@@ -5,6 +5,7 @@ using FytSoa.Infra.Common;
 using Newtonsoft.Json;
 using System.Linq;
 using SqlSugar;
+using FytSoa.Infra.Common.Logger;
 
 namespace FytSoa.Infra.Data.Context
 {
@@ -50,7 +51,9 @@ namespace FytSoa.Infra.Data.Context
                 sb_error.AppendLine("###参数信息:" + sb_SugarParameterStr.ToString());
                 sb_error.AppendLine("###StackTrace信息:" + exp.StackTrace);
 
-                //Logger.Default.Error(sb_error.ToString());
+                Logger.Default.Setting("SqlError");
+                Logger.Default.Error(sb_error.ToString());
+                Logger.Default.Setting("");
             };
             Db.Aop.OnExecutingChangeSql = (sql, pars) => //SQL执行前 可以修改SQL
             {
@@ -66,7 +69,11 @@ namespace FytSoa.Infra.Data.Context
                 var time = it.Time;
                 var diffType = it.DiffType;//枚举值 insert 、update 和 delete 用来作业务区分
 
-                //你可以在这里面写日志方法
+                //保存修改操作的数据变化
+                if (diffType == DiffType.update)
+                {
+
+                }
             };
         }
 

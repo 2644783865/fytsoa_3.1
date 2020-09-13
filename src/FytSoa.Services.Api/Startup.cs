@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace FytSoa.Services.Api
 {
@@ -38,8 +37,6 @@ namespace FytSoa.Services.Api
             // Swagger Config
             services.AddSwaggerConfiguration();
 
-            // log config
-            //services.LoggerConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

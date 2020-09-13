@@ -4,28 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Serilog;
+using FytSoa.Infra.Common.Logger;
 
 namespace FytSoa.Services.Api.Controllers
 {
     [Route("api/[controller]")]
     public class TestController : ControllerBase
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger<TestController> _logger;
 
-        //public TestController(ILogger<TestController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        public TestController(ILogger<TestController> logger)
+        {
+            _logger = logger;
+        }
 
         // GET: api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            //_logger.LogInformation("测试");
-            Log.Logger = new LoggerConfiguration().CreateLogger();
-            Log.Information("No one listens to me!");
-            Log.Debug("No one listens to me!");
+            //_logger.LogError("Test error logging");
+
+            //Logger.Default.Info("Test Info");
+
+            Logger.Default.Debug("Test Debug");
+
+            //Logger.Default.Error("Test Error");
+
+            Logger.Default.Setting("cur");
+            Logger.Default.Info("Test Info");
             return new string[] { "value1", "value2" };
         }
 

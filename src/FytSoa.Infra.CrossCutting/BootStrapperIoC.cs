@@ -19,7 +19,6 @@ namespace FytSoa.Infra.CrossCutting
             services.AddScoped<ISysLogService, SysLogService>();
 
             // Infra - Data
-            //services.AddScoped<IBaseRepository<>, BaseRepository<>>();
             services.AddScoped<ISysLogRepository, SysLogRepository>();
         }
     }
