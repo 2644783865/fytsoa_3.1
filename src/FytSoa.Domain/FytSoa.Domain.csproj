@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FytSoa.Domain.Core\FytSoa.Domain.Core.csproj" />
+    <ProjectReference Include="..\FytSoa.Infra.Common\FytSoa.Infra.Common.csproj" />
   </ItemGroup>
 
 </Project>

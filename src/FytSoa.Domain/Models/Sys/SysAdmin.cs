@@ -4,6 +4,7 @@ using System.Text;
 using SqlSugar;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using FytSoa.Infra.Common;
 
 namespace FytSoa.Domain.Models.Sys
 {
@@ -43,7 +44,7 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         private string _loginPassWord;
         public string LoginPassWord {
-            get { return !string.IsNullOrEmpty(_loginPassWord)?Common.DES3Encrypt.DecryptString(_loginPassWord):_loginPassWord; }
+            get { return !string.IsNullOrEmpty(_loginPassWord)?DES3Encrypt.DecryptString(_loginPassWord):_loginPassWord; }
 
             set { _loginPassWord = value; }
         }
