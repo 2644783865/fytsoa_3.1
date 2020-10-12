@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FytSoa.Infra.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -46,7 +47,6 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <returns></returns>
         Task<List<T>> GetListAsync(bool Async = true);
 
-
         /// <summary>
         /// 获得一条数据
         /// </summary>
@@ -60,6 +60,37 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="where">Expression<Func<T, bool>></param>
         /// <returns></returns>
         Task<T> GetModelAsync(Expression<Func<T, bool>> where, bool Async = true);
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="order">排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <param name="page">当前页</param>
+        /// <param name="limit">每页条数</param>
+        /// <returns></returns>
+        Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where,Expression<Func<T, object>> order, int orderEnum,int page,int limit);
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="orderby">排序</param>
+        /// <param name="page">当前页</param>
+        /// <param name="limit">每页条数</param>
+        /// <returns></returns>
+        Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where, string orderby, int page, int limit);
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="orderby">排序</param>
+        /// <param name="page">当前页</param>
+        /// <param name="limit">每页条数</param>
+        /// <returns></returns>
+        Task<PageResult<T>> GetPageResult(string where, string orderby, int page, int limit);
         #endregion
 
         #region 修改操作
