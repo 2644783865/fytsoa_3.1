@@ -44,7 +44,7 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         private string _loginPassWord;
         public string LoginPassWord {
-            get { return !string.IsNullOrEmpty(_loginPassWord)?DES3Encrypt.DecryptString(_loginPassWord):_loginPassWord; }
+            get { return !string.IsNullOrEmpty(_loginPassWord)? Security.DES3Encrypt.DecryptString(_loginPassWord):_loginPassWord; }
 
             set { _loginPassWord = value; }
         }
