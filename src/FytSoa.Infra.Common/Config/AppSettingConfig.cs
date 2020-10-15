@@ -42,7 +42,7 @@ namespace FytSoa.Infra.Common
             {
                 if (string.IsNullOrEmpty(_RedisConnectionString))
                 {
-                    _RedisConnectionString = Configuration["Redis:ConnectionString"];
+                    _RedisConnectionString = Configuration["Cache:Redis"];
                 }
                 return _RedisConnectionString;
             }

@@ -22,9 +22,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">T</param>
         /// <returns></returns>
-        public async Task<int> AddAsync(T parm, bool Async = true)
+        public async Task<int> AddAsync(T parm)
         {
-            return Async ? await Db.Insertable<T>(parm).ExecuteCommandAsync() : Db.Insertable<T>(parm).ExecuteCommand();
+            return await Db.Insertable<T>(parm).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -32,9 +32,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">List<T></param>
         /// <returns></returns>
-        public async Task<int> AddListAsync(List<T> parm, bool Async = true)
+        public async Task<int> AddListAsync(List<T> parm)
         {
-            return Async ? await Db.Insertable<T>(parm).ExecuteCommandAsync() : Db.Insertable<T>(parm).ExecuteCommand();
+            return await Db.Insertable<T>(parm).ExecuteCommandAsync();
         }
         #endregion
 
@@ -44,10 +44,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="where">Expression<Func<T, bool>></param>
         /// <returns></returns>
-        public async Task<T> GetModelAsync(Expression<Func<T, bool>> where, bool Async = true)
+        public async Task<T> GetModelAsync(Expression<Func<T, bool>> where)
         {
-            return Async ? await Db.Queryable<T>().Where(where).FirstAsync() ?? new T() { }
-                : Db.Queryable<T>().Where(where).First() ?? new T() { };
+            return await Db.Queryable<T>().Where(where).FirstAsync() ?? new T() { };
         }
 
         /// <summary>
@@ -55,10 +54,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">string</param>
         /// <returns></returns>
-        public async Task<T> GetModelAsync(string parm, bool Async = true)
+        public async Task<T> GetModelAsync(string parm)
         {
-            return Async ? await Db.Queryable<T>().Where(parm).FirstAsync() ?? new T() { }
-                : Db.Queryable<T>().Where(parm).First() ?? new T() { };
+            return await Db.Queryable<T>().Where(parm).FirstAsync() ?? new T() { };
         }
 
         /// <summary>
@@ -70,22 +68,22 @@ namespace FytSoa.Infra.Data.Repository
         /// <param name="Async">是否同步</param>
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
-            Expression<Func<T, object>> order, int orderEnum, bool Async = true)
+            Expression<Func<T, object>> order, int orderEnum)
         {
             var query = Db.Queryable<T>()
                         .Where(where)
                         .OrderByIF(orderEnum == 1, order, OrderByType.Desc)
                         .OrderByIF(orderEnum == 2, order, OrderByType.Asc);
-            return Async ? await query.ToListAsync() : query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// 获得列表，不需要任何条件
         /// </summary>
         /// <returns></returns>
-        public async Task<List<T>> GetListAsync(bool Async = true)
+        public async Task<List<T>> GetListAsync()
         {
-            return Async ? await Db.Queryable<T>().ToListAsync() : Db.Queryable<T>().ToList();
+            return await Db.Queryable<T>().ToListAsync();
         }
 
         /// <summary>
@@ -158,9 +156,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">T</param>
         /// <returns></returns>
-        public async Task<int> UpdateAsync(T parm, bool Async = true)
+        public async Task<int> UpdateAsync(T parm)
         {
-            return Async ? await Db.Updateable<T>(parm).ExecuteCommandAsync() : Db.Updateable<T>(parm).ExecuteCommand();
+            return await Db.Updateable<T>(parm).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -170,10 +168,9 @@ namespace FytSoa.Infra.Data.Repository
         /// <param name="ignore">忽略列，如new {it.id,it.name}</param>
         /// <returns></returns>
         public async Task<int> UpdateAsync(T model,
-            Expression<Func<T, object>> ignore, bool Async = true)
+            Expression<Func<T, object>> ignore)
         {
-            return Async ? await Db.Updateable<T>(model).IgnoreColumns(ignore).ExecuteCommandAsync()
-                    : Db.Updateable<T>(model).IgnoreColumns(ignore).ExecuteCommand();
+            return await Db.Updateable<T>(model).IgnoreColumns(ignore).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -181,9 +178,9 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">T</param>
         /// <returns></returns>
-        public async Task<int> UpdateAsync(List<T> parm, bool Async = true)
+        public async Task<int> UpdateAsync(List<T> parm)
         {
-            return Async ? await Db.Updateable<T>(parm).ExecuteCommandAsync() : Db.Updateable<T>(parm).ExecuteCommand();
+            return await Db.Updateable<T>(parm).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -193,10 +190,9 @@ namespace FytSoa.Infra.Data.Repository
         /// <param name="where">Expression<Func<T,bool>></param>
         /// <returns></returns>
         public async Task<int> UpdateAsync(Expression<Func<T, T>> columns,
-            Expression<Func<T, bool>> where, bool Async = true)
+            Expression<Func<T, bool>> where)
         {
-            return Async ? await Db.Updateable<T>().SetColumns(columns).Where(where).ExecuteCommandAsync()
-                    : Db.Updateable<T>().SetColumns(columns).Where(where).ExecuteCommand();
+            return await Db.Updateable<T>().SetColumns(columns).Where(where).ExecuteCommandAsync();
         }
 
        
@@ -208,10 +204,10 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="parm">string</param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync(string parm, bool Async = true)
+        public async Task<int> DeleteAsync(string parm)
         {
             var list = new List<long>();
-            return Async ? await Db.Deleteable<T>().In(list.ToArray()).ExecuteCommandAsync() : Db.Deleteable<T>().In(list.ToArray()).ExecuteCommand();
+            return await Db.Deleteable<T>().In(list.ToArray()).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -219,23 +215,23 @@ namespace FytSoa.Infra.Data.Repository
         /// </summary>
         /// <param name="where">Expression<Func<T, bool>></param>
         /// <returns></returns>
-        public async Task<int> DeleteAsync(Expression<Func<T, bool>> where, bool Async = true)
+        public async Task<int> DeleteAsync(Expression<Func<T, bool>> where)
         {
-            return Async ? await Db.Deleteable<T>().Where(where).ExecuteCommandAsync() : Db.Deleteable<T>().Where(where).ExecuteCommand();
+            return await Db.Deleteable<T>().Where(where).ExecuteCommandAsync();
         }
         #endregion
 
         #region 查询Count
-        public async Task<int> CountAsync(Expression<Func<T, bool>> where, bool Async = true)
+        public async Task<int> CountAsync(Expression<Func<T, bool>> where)
         {
-            return Async ? await Db.Queryable<T>().CountAsync(where) : Db.Queryable<T>().Count(where);
+            return await Db.Queryable<T>().CountAsync(where);
         }
         #endregion
 
         #region 是否存在
-        public async Task<bool> IsExistAsync(Expression<Func<T, bool>> where, bool Async = true)
+        public async Task<bool> IsExistAsync(Expression<Func<T, bool>> where)
         {
-            return Async ? await Db.Queryable<T>().AnyAsync(where) : Db.Queryable<T>().Any(where);
+            return await Db.Queryable<T>().AnyAsync(where);
         }
         #endregion
     }

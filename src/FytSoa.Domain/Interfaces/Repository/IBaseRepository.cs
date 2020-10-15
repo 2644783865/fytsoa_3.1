@@ -18,14 +18,14 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// </summary>
         /// <param name="parm">cms_advlist</param>
         /// <returns></returns>
-        Task<int> AddAsync(T parm,bool Async=true);
+        Task<int> AddAsync(T parm);
 
         /// <summary>
         /// 批量添加数据
         /// </summary>
         /// <param name="parm">List<T></param>
         /// <returns></returns>
-        Task<int> AddListAsync(List<T> parm, bool Async = true);
+        Task<int> AddListAsync(List<T> parm);
 
         #endregion
 
@@ -39,27 +39,27 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="Async">是否同步</param>
         /// <returns></returns>
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
-            Expression<Func<T, object>> order, int orderEnum, bool Async = true);
+            Expression<Func<T, object>> order, int orderEnum);
 
         /// <summary>
         /// 获得列表
         /// </summary>
         /// <returns></returns>
-        Task<List<T>> GetListAsync(bool Async = true);
+        Task<List<T>> GetListAsync();
 
         /// <summary>
         /// 获得一条数据
         /// </summary>
         /// <param name="parm">string</param>
         /// <returns></returns>
-        Task<T> GetModelAsync(string parm, bool Async = true);
+        Task<T> GetModelAsync(string parm);
 
         /// <summary>
         /// 获得一条数据
         /// </summary>
         /// <param name="where">Expression<Func<T, bool>></param>
         /// <returns></returns>
-        Task<T> GetModelAsync(Expression<Func<T, bool>> where, bool Async = true);
+        Task<T> GetModelAsync(Expression<Func<T, bool>> where);
 
         /// <summary>
         /// 分页查询
@@ -99,7 +99,7 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// </summary>
         /// <param name="parm">T</param>
         /// <returns></returns>
-        Task<int> UpdateAsync(T parm, bool Async = true);
+        Task<int> UpdateAsync(T parm);
 
         /// <summary>
         /// 修改一条数据，增加忽略项
@@ -108,14 +108,14 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="ignore">忽略列，如new {it.id,it.name}</param>
         /// <returns></returns>
         Task<int> UpdateAsync(T model,
-            Expression<Func<T, object>> ignore, bool Async = true);
+            Expression<Func<T, object>> ignore);
 
         /// <summary>
         /// 修改一条数据
         /// </summary>
         /// <param name="parm">T</param>
         /// <returns></returns>
-        Task<int> UpdateAsync(List<T> parm, bool Async = true);
+        Task<int> UpdateAsync(List<T> parm);
 
         /// <summary>
         /// 修改一条数据，可用作假删除
@@ -124,7 +124,7 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="where">Expression<Func<T,bool>></param>
         /// <returns></returns>
         Task<int> UpdateAsync(Expression<Func<T, T>> columns,
-            Expression<Func<T, bool>> where, bool Async = true);
+            Expression<Func<T, bool>> where);
         #endregion
 
         #region 删除操作
@@ -133,23 +133,23 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// </summary>
         /// <param name="parm">string</param>
         /// <returns></returns>
-        Task<int> DeleteAsync(string parm, bool Async = true);
+        Task<int> DeleteAsync(string parm);
 
         /// <summary>
         /// 删除一条或多条数据
         /// </summary>
         /// <param name="where">Expression<Func<T, bool>></param>
         /// <returns></returns>
-        Task<int> DeleteAsync(Expression<Func<T, bool>> where, bool Async = true);
+        Task<int> DeleteAsync(Expression<Func<T, bool>> where);
 
         #endregion
 
         #region 查询Count
-        Task<int> CountAsync(Expression<Func<T, bool>> where, bool Async = true);
+        Task<int> CountAsync(Expression<Func<T, bool>> where);
         #endregion
 
         #region 是否存在
-        Task<bool> IsExistAsync(Expression<Func<T, bool>> where, bool Async = true);
+        Task<bool> IsExistAsync(Expression<Func<T, bool>> where);
         #endregion
     }
 }
