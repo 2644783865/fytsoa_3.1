@@ -37,6 +37,9 @@ namespace FytSoa.Services.Api
             // Swagger Config
             services.AddSwaggerConfiguration();
 
+            // Jwt Config
+            services.AddJwtConfiguration();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,6 +48,8 @@ namespace FytSoa.Services.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseJwtSetup();
 
             app.UseRouting();
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FytSoa.Infra.Common.Logger;
+using FytSoa.Infra.CrossCutting;
 
 namespace FytSoa.Services.Api.Controllers
 {
@@ -26,13 +27,15 @@ namespace FytSoa.Services.Api.Controllers
 
             //Logger.Default.Info("Test Info");
 
-            Logger.Default.Debug("Test Debug");
+            //Logger.Default.Debug("Test Debug");
 
             //Logger.Default.Error("Test Error");
 
-            Logger.Default.Setting("cur");
-            Logger.Default.Info("Test Info");
-            return new string[] { "value1", "value2" };
+            //Logger.Default.Setting("cur");
+            //Logger.Default.Info("Test Info");
+
+            var token = JwtAuthService.IssueJWT(new JwtToken() { id="123456",role= "Admin" });
+            return new string[] { "value1", "value2", token };
         }
 
     }

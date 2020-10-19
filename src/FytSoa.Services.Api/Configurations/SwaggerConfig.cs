@@ -75,8 +75,6 @@ namespace FytSoa.Services.Api.Configurations
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
-
-            
         }
     }
 }

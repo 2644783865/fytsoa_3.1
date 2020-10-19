@@ -7,11 +7,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
     <PackageReference Include="CSRedisCore" Version="3.6.5" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FytSoa.Application\FytSoa.Application.csproj" />
     <ProjectReference Include="..\FytSoa.Infra.Data\FytSoa.Infra.Data.csproj" />
+    <ProjectReference Include="..\FytSoa.Infra.Common\FytSoa.Infra.Common.csproj" />
   </ItemGroup>
 
 </Project>
