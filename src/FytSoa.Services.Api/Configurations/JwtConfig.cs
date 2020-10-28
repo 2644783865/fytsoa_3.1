@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using FytSoa.Application;
 
 namespace FytSoa.Services.Api.Configurations
 {
@@ -48,6 +49,13 @@ namespace FytSoa.Services.Api.Configurations
         {
             if (app == null) throw new ArgumentNullException(nameof(app));
 
+            // global error
+            app.UseMiddleware<ExceptionFilter>();
+
+            // check jwt token
+            app.UseMiddleware<JwtTokenFilter>();
+
+            // authentication
             app.UseAuthentication();
         }
     }

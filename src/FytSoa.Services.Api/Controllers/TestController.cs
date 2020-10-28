@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FytSoa.Infra.Common.Logger;
 using FytSoa.Infra.CrossCutting;
+using Microsoft.AspNetCore.Authorization;
+using FytSoa.Application;
 
 namespace FytSoa.Services.Api.Controllers
 {
@@ -19,9 +21,8 @@ namespace FytSoa.Services.Api.Controllers
             _logger = logger;
         }
 
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("token")]
+        public IEnumerable<string> Get(string role)
         {
             //_logger.LogError("Test error logging");
 
@@ -34,8 +35,22 @@ namespace FytSoa.Services.Api.Controllers
             //Logger.Default.Setting("cur");
             //Logger.Default.Info("Test Info");
 
-            var token = JwtAuthService.IssueJWT(new JwtToken() { id="123456",role= "Admin" });
-            return new string[] { "value1", "value2", token };
+            var token = JwtAuthService.IssueJWT(new JwtToken() { id="123456",role= role });
+            return new string[] {  token };
+        }
+
+        [HttpGet("Admin")]
+        [Authorize("Admin")]
+        public IEnumerable<string> GetAdmin()
+        {
+            return new string[] { "Admin" };
+        }
+
+        [HttpGet("App")]
+        [Authorize("App")]
+        public IEnumerable<string> GetApp()
+        {
+            return new string[] { "App" };
         }
 
     }

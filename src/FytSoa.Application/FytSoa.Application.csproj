@@ -12,6 +12,8 @@
   <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="AutoMapper\" />
+    <Folder Include="Filters\" />
+    <Folder Include="Authorize\" />
   </ItemGroup>
 
   <ItemGroup>
