@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using FytSoa.Application.Interfaces;
 using FytSoa.Domain.Models.Sys;
+using FytSoa.Infra.CrossCutting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace FytSoa.Services.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize("Admin")]
     public class LogsController : ControllerBase
     {
         private readonly ISysLogService _sysLogService;
@@ -30,9 +33,10 @@ namespace FytSoa.Services.Api.Controllers
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IEnumerable<SysLog>> Get(int id)
         {
-            return "value";
+            ISysLogService logService = ServiceLocator.GetService<ISysLogService>();
+            return await logService.GetAll();
         }
 
         // POST api/<controller>

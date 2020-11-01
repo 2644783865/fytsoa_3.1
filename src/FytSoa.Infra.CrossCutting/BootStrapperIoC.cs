@@ -5,6 +5,7 @@ using FytSoa.Domain.Repository.Interfaces;
 using FytSoa.Infra.Common;
 using FytSoa.Infra.Data.Implements.Sys;
 using FytSoa.Infra.Data.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,21 @@ namespace FytSoa.Infra.CrossCutting
 
             //redis cache
             RedisHelper.Initialization(new CSRedis.CSRedisClient(AppSettingConfig.RedisConnectionString));
+        }
+    }
+
+    public static class ServiceLocator
+    {
+        public static IServiceProvider Instance { get; set; }
+
+        // <summary>
+        /// 手动获取注入的对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetService<T>() where T : class
+        {
+            return Instance?.GetService<IHttpContextAccessor>()?.HttpContext.RequestServices.GetService<T>();
         }
     }
 }

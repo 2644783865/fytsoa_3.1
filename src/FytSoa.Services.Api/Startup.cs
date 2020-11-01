@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace FytSoa.Services.Api
 {
@@ -48,6 +47,8 @@ namespace FytSoa.Services.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            ServiceLocator.Instance = app.ApplicationServices;
 
             app.UseJwtSetup();
 
