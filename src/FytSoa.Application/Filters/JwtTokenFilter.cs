@@ -24,16 +24,16 @@ namespace FytSoa.Application
             }
             var headers = context.Request.Headers;
 
-            if (!headers.ContainsKey("Authorization"))
-            {
-                string path = context.Request.Path.Value;
-                if (path.Contains("swagger") || path.Contains("token"))
-                {
-                    return _next(context);
-                }
-                // check authorize  wait...
-                return JwtTokenHandlerAsync(context);
-            }
+            //if (!headers.ContainsKey("Authorization"))
+            //{
+            //    string path = context.Request.Path.Value;
+            //    if (path.Contains("swagger") || path.Contains("token"))
+            //    {
+            //        return _next(context);
+            //    }
+            //    // check authorize  wait...
+            //    return JwtTokenHandlerAsync(context);
+            //}
             return _next(context);
         }
 
