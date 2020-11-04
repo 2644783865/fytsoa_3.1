@@ -34,10 +34,10 @@ const options = {
                         icon: 'file-ppt'
                     },
                     children: [{
-                        path: 'workplace',
+                        path: 'default',
                         name: '工作台',
                         component: () =>
-                            import ('@/pages/demo'),
+                            import ('@/pages/workplace'),
                     }, {
                         path: 'datas',
                         name: '数据中心',
