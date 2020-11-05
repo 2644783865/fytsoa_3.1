@@ -7,8 +7,10 @@ module.exports = {
     warning: '#faad14',
     error: '#f5222d'
   },
+  fixedHeader: true,
   multiPage: true,
   animate: {
+    disabled: false,
     name: 'fade',
     direction: 'left'
   }
