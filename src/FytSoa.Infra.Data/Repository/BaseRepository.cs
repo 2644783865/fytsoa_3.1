@@ -60,12 +60,27 @@ namespace FytSoa.Infra.Data.Repository
         }
 
         /// <summary>
+        /// 根据条件，获得最新的一条数据
+        /// </summary>
+        /// <param name="where">拉姆达条件</param>
+        /// <param name="order">拉姆达排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <returns></returns>
+        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> order, int orderEnum)
+        {
+            return await Db.Queryable<T>()
+                .Where(where)
+                .OrderByIF(orderEnum == 1, order, OrderByType.Desc)
+                .OrderByIF(orderEnum == 2, order, OrderByType.Asc)
+                .FirstAsync() ?? new T() { };
+        }
+
+        /// <summary>
         /// 根据条件查询列表
         /// </summary>
         /// <param name="where">拉姆达条件</param>
         /// <param name="order">拉姆达排序</param>
         /// <param name="orderEnum">枚举，1=desc 2=asc</param>
-        /// <param name="Async">是否同步</param>
         /// <returns></returns>
         public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
             Expression<Func<T, object>> order, int orderEnum)
@@ -74,6 +89,47 @@ namespace FytSoa.Infra.Data.Repository
                         .Where(where)
                         .OrderByIF(orderEnum == 1, order, OrderByType.Desc)
                         .OrderByIF(orderEnum == 2, order, OrderByType.Asc);
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件查询列表
+        /// </summary>
+        /// <param name="where">拉姆达条件</param>
+        /// <param name="order">order by id desc</param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
+            string order)
+        {
+            var query = Db.Queryable<T>()
+                        .Where(where)
+                        .OrderBy(order);
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// 查询所有，只处理排序
+        /// </summary>
+        /// <param name="order">拉姆达排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(Expression<Func<T, object>> order, int orderEnum)
+        {
+            var query = Db.Queryable<T>()
+                        .OrderByIF(orderEnum == 1, order, OrderByType.Desc)
+                        .OrderByIF(orderEnum == 2, order, OrderByType.Asc);
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据条件查询列表
+        /// </summary>
+        /// <param name="order">order by id desc</param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync(string order)
+        {
+            var query = Db.Queryable<T>()
+                        .OrderBy(order);
             return await query.ToListAsync();
         }
 

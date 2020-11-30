@@ -43,8 +43,8 @@ namespace FytSoa.Application
 
             var result = JsonConvert.SerializeObject(new ApiResult<string>()
             {
-                status = 401,
-                msg = "无权限"
+                Code = 401,
+                Message = "无权限"
             });
 
             await context.Response.WriteAsync(result);

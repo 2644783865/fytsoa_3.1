@@ -38,8 +38,8 @@ namespace FytSoa.Application
 
             var result = JsonConvert.SerializeObject(new ApiResult<string>()
             {
-                status = 500,
-                msg = ex.Message
+                Code = 500,
+                Message = ex.Message
             });
 
             await context.Response.WriteAsync(result);

@@ -36,10 +36,33 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="where">拉姆达条件</param>
         /// <param name="order">拉姆达排序</param>
         /// <param name="orderEnum">枚举，1=desc 2=asc</param>
-        /// <param name="Async">是否同步</param>
         /// <returns></returns>
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
             Expression<Func<T, object>> order, int orderEnum);
+
+        /// <summary>
+        /// 根据条件查询列表
+        /// </summary>
+        /// <param name="where">拉姆达条件</param>
+        /// <param name="order">order by id desc</param>
+        /// <returns></returns>
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>> where,
+            string order);
+
+        /// <summary>
+        /// 查询所有，只处理排序
+        /// </summary>
+        /// <param name="order">拉姆达排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <returns></returns>
+        Task<List<T>> GetListAsync(Expression<Func<T, object>> order, int orderEnum);
+
+        /// <summary>
+        /// 根据条件查询列表
+        /// </summary>
+        /// <param name="order">order by id desc</param>
+        /// <returns></returns>
+        Task<List<T>> GetListAsync(string order);
 
         /// <summary>
         /// 获得列表
@@ -53,6 +76,15 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="parm">string</param>
         /// <returns></returns>
         Task<T> GetModelAsync(string parm);
+
+        /// <summary>
+        /// 根据条件，获得最新的一条数据
+        /// </summary>
+        /// <param name="where">拉姆达条件</param>
+        /// <param name="order">拉姆达排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <returns></returns>
+        Task<T> GetFirstAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> order, int orderEnum);
 
         /// <summary>
         /// 获得一条数据
