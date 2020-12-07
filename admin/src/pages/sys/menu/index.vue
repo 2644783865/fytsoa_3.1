@@ -2,6 +2,10 @@
     <a-row style="margin-top: 0" :gutter="[24, 24]">
         <a-col :sm="24" :md="24" :xl="24">
             <a-card>
+                <a-button type="primary" icon="plus" @click="$refs.modify.handelModify()">添加</a-button>
+                <a-button type="danger" icon="delete">添加</a-button>
+            </a-card>
+            <a-card>
                 <div>
                     <div class="operator">
 
@@ -109,7 +113,7 @@
         },
         methods: {
             init() {
-                request('http://10.1.1.226:5005/api/Menu', METHOD.GET).then(res => {
+                request('http://192.168.1.11:5005/api/Menu', METHOD.GET).then(res => {
                     var result = res.data;
                     console.log(result);
                     this.data = this.changeTree(result.data);
@@ -155,5 +159,7 @@
 </script>
 
 <style lang="less" scoped>
-
+.ant-btn {
+    margin-right: 15px;
+}
 </style>
