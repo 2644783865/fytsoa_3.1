@@ -113,7 +113,7 @@
         },
         methods: {
             init() {
-                request('http://192.168.1.11:5005/api/Menu', METHOD.GET).then(res => {
+                request('http://10.1.1.226:5005/api/Menu', METHOD.GET).then(res => {
                     var result = res.data;
                     console.log(result);
                     this.data = this.changeTree(result.data);
@@ -159,7 +159,7 @@
 </script>
 
 <style lang="less" scoped>
-.ant-btn {
-    margin-right: 15px;
-}
+    .ant-btn {
+        margin-right: 15px;
+    }
 </style>
