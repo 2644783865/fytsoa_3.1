@@ -10,7 +10,7 @@ namespace FytSoa.Domain.Models.Sys
     /// 组织机构表
     /// </summary>
     [SugarTable("sys_organize")]
-    public class SysOrganize : EntityBase<string>
+    public class SysOrganize : EntityBase<long>
     {
 
         /// <summary>

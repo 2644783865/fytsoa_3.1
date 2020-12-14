@@ -28,7 +28,9 @@ namespace FytSoa.Services.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => {
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+            });
 
             // Register DI
             BootStrapperIoC.RegisterServices(services);

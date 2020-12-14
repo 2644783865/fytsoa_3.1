@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using FytSoa.Infra.Common.Extensions;
+using Newtonsoft.Json;
 using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FytSoa.Domain.Models
 {
@@ -12,7 +10,7 @@ namespace FytSoa.Domain.Models
         /// 唯一编号
         /// <summary>
         [SugarColumn(IsPrimaryKey = true)]
-        [JsonConverter(typeof(string))]
+        [JsonConverter(typeof(ConverterExtension), ConverterExtensionShip.UInt64)]
         public virtual TKey Id { get; set; }
     }
 }
