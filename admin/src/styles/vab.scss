@@ -1,0 +1,435 @@
+/**
+ * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
+ * @description 全局样式
+ */
+
+@charset "utf-8";
+
+@import './normalize.scss';
+@import './transition.scss';
+@import './loading.scss';
+$base: '.vab';
+
+@mixin scrollbar {
+  max-height: 88vh;
+  margin-bottom: 0.5vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.3);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(144, 147, 153, 0.3);
+  }
+}
+
+@mixin base-scrollbar {
+  &::-webkit-scrollbar {
+    width: 13px;
+    height: 13px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    border-radius: 7px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-track:hover {
+    background-color: #f8fafc;
+  }
+}
+
+img {
+  object-fit: cover;
+}
+
+a {
+  color: $base-color-blue;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html {
+  body {
+    position: relative;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-size: $base-font-size-default;
+    color: #2c3e50;
+    background: #f6f8f9;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    @include base-scrollbar;
+
+    div {
+      @include base-scrollbar;
+    }
+
+    svg,
+    i {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .v-modal {
+      backdrop-filter: blur(10px);
+    }
+
+    /* el-tag开始 */
+    .el-tag+.el-tag {
+      margin-left: 10px;
+    }
+
+    /* el-tag结束 */
+
+    /* markdown编辑器开始 */
+    .editor-toolbar {
+
+      .no-mobile,
+      .fa-question-circle {
+        display: none;
+      }
+    }
+
+    /* markdown编辑器结束 */
+
+    /* 间隔线开始 */
+    .el-divider--horizontal {
+      margin: 10px 0 25px 0;
+
+      .el-divider__text {
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+    }
+
+    /* 间隔线结束 */
+
+    /* 大图展示开始 */
+    .el-image-viewer {
+      &__close {
+        .el-icon-circle-close {
+          color: $base-color-white;
+        }
+      }
+    }
+
+    /* 大图展示结束 */
+
+    .vue-admin-beautiful-wrapper {
+      .app-main-container {
+        @include base-scrollbar;
+
+        >[class*='-container'] {
+          padding: $base-padding;
+          background: $base-color-white;
+        }
+      }
+    }
+
+    /* 进度条开始 */
+    #nprogress {
+      position: fixed;
+      z-index: $base-z-index;
+
+      .bar {
+        background: $base-color-blue !important;
+      }
+
+      .peg {
+        box-shadow: 0 0 10px $base-color-blue, 0 0 5px $base-color-blue !important;
+      }
+    }
+
+    /* 进度条结束 */
+
+    /* 表格开始 */
+
+    .el-table {
+      .el-table__body-wrapper {
+        @include base-scrollbar;
+      }
+
+      th {
+        background: #f5f7fa;
+      }
+
+      td,
+      th {
+        position: relative;
+        box-sizing: border-box;
+
+        .cell {
+
+          color: #606266;
+
+          .el-image {
+            width: 50px;
+            height: 50px;
+            border-radius: $base-border-radius;
+          }
+        }
+      }
+    }
+
+    /* 表格结束 */
+
+    /* 分页开始 */
+    .el-pagination {
+      padding: 2px 5px;
+      margin: 15px 0 0 0;
+      font-weight: normal;
+      color: $base-color-black;
+      text-align: center;
+    }
+
+    /* 分页结束 */
+
+    /* 菜单开始 */
+    .el-menu.el-menu--popup.el-menu--popup-right-start {
+      @include scrollbar;
+    }
+
+    .el-menu.el-menu--popup.el-menu--popup-bottom-start {
+      @include scrollbar;
+    }
+
+    .el-submenu__title i {
+      color: $base-color-white;
+    }
+
+    /* 菜单结束 */
+
+    /* 弹窗开始 */
+
+    .el-dialog,
+    .el-message-box {
+      &__body {
+        border-top: 1px solid $base-border-color;
+
+        .el-form {
+          padding-right: 30px;
+        }
+      }
+
+      &__footer {
+        padding: $base-padding;
+        text-align: right;
+        border-top: 1px solid $base-border-color;
+      }
+
+      &__content {
+        padding: 20px 20px 20px 20px;
+      }
+    }
+
+    /* 弹窗结束 */
+
+    /* 卡片开始 */
+    .el-card {
+      margin-bottom: 15px;
+
+      &__body {
+        padding: $base-padding;
+      }
+    }
+
+    /* 卡片结束 */
+
+    /* 下拉树样式-----------开始 */
+    .select-tree-popper {
+      .el-scrollbar {
+        .el-scrollbar__view {
+          .el-select-dropdown__item {
+            height: auto;
+            max-height: 274px;
+            padding: 0;
+            overflow-y: auto;
+            line-height: 26px;
+          }
+        }
+      }
+    }
+
+    /* 下拉树样式-----------结束 */
+  }
+}
+
+
+.tabs-bar-container {
+  height: 50px !important;
+
+  .tabs-content {
+    height: 38px !important;
+
+    .el-tabs__header {
+      .el-tabs__item {
+        border: none !important;
+        height: 38px !important;
+        line-height: 38px !important;
+        margin-top: 6px;
+        margin-right: -10px !important;
+        padding: 0 30px 0 30px;
+      }
+
+      .el-tabs__item.is-active,
+      .el-tabs__item.is-active:hover {
+        padding: 0 30px 0 30px !important;
+        -webkit-mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=) !important;
+        mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=) !important;
+        -webkit-mask-size: 100% 100% !important;
+        mask-size: 100% 100% !important;
+        color: #1890ff !important;
+        background: rgba(24, 144, 255, .1) !important;
+      }
+
+      .el-tabs__item:hover {
+        color: #1890ff !important;
+        background: #dee1e6 !important;
+        padding: 0 30px 0 30px;
+        -webkit-mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=) !important;
+        mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=) !important;
+        -webkit-mask-size: 100% 100% !important;
+        mask-size: 100% 100% !important;
+      }
+    }
+  }
+}
+
+// 针对新主题的测试
+.logo-container-gallery {
+  color: #515a6e !important;
+  background: #fff !important;
+  position: relative;
+  height: 60px;
+  overflow: hidden;
+  line-height: 60px;
+  background: transparent;
+  height: 65px;
+  line-height: 65px;
+  text-align: center;
+
+  .vab-icon {
+    color: #515a6e !important;
+    background: #f7faff !important;
+  }
+
+  .title {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-left: 65px;
+    color: #515a6e !important;
+    background: #fff !important;
+    display: inline-block;
+    overflow: hidden;
+    font-size: 20px;
+    line-height: 55px;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .logo {
+    position: fixed;
+    top: 0;
+    display: block;
+    width: 65px;
+    height: 65px;
+    margin: 0;
+    background: #f7faff !important;
+    color: #515a6e !important;
+
+    svg {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+    }
+  }
+
+
+}
+
+.layout-container-vertical {
+  .app-main-container {
+    margin: 5px auto !important;
+  }
+}
+
+.layout-container-gallery {
+  .side-bar-container {
+    box-shadow: 0 1px 4px rgba(0, 21, 41, .08) !important;
+  }
+
+  .app-main-container {
+    margin: 10px auto !important;
+    background: #fff;
+    border-radius: 2px;
+
+    .app-main-height {
+      min-height: calc(100vh - 135px);
+    }
+  }
+
+}
+
+
+//全局样式
+.vue-admin-beautiful-wrapper {
+  .vab-main {
+    position: relative;
+    width: auto;
+    min-height: 100%;
+    margin-left: 256px;
+  }
+}
+
+.fyt-tools {
+  margin-bottom: 15px;
+}
+
+.fyt-search {
+  padding: 15px;
+  border-bottom: 6px solid #f6f8f9
+}
+
+.fyt-search .el-form-item {
+  margin-bottom: 0px !important;
+}
+
+.nav-bar-container .right-panel svg {
+  font-size: 14px !important;
+  color: #606266 !important;
+  margin-right: 30px !important;
+}
+
+.theme-bar-setting svg:not(:root).svg-inline--fa {
+  color: #ffffff !important;
+  margin-right: 20px !important;
+}

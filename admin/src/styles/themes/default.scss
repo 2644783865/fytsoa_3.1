@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+.logo-container-vertical {
+    background: #002140 !important;
+
+
+}
+
+.layout-container-vertical {
+    .side-bar-container {
+        background: #011528 !important;
+    }
+
+    .el-menu-item {
+        background: #001529 !important;
+    }
+
+    .el-submenu__title {
+        background: #001529 !important;
+    }
+
+    .el-menu--inline {
+        .el-menu-item {
+            background: #000c17 !important;
+        }
+    }
+}

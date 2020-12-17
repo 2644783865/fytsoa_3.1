@@ -26,19 +26,11 @@ namespace FytSoa.Application.Services
             try
             {
                 model.Id = Unique.Id();
-                if (string.IsNullOrEmpty(model.ParentId))
+                if (model.ParentId != 0)
                 {
-                    model.ParentId = "0";
-                    model.ParentGroupId = ","+model.Id+",";
+                    var _model = await _sysMenuRepository.GetModelAsync(m => m.Id == model.ParentId);
+                    model.Layer = _model.Layer + 1;
                 }
-                else
-                {
-                    var _parent = await _sysMenuRepository.GetModelAsync(m=>m.Id==model.Id);
-                    model.ParentGroupId = _parent.ParentGroupId +model.Id+ "," ;
-                    model.Layer = _parent.Layer + 1;
-                }
-                var _upParent = await _sysMenuRepository.GetFirstAsync(m=>true,m=>m.Sort,1);
-                model.Sort = string.IsNullOrEmpty(_upParent?.Id) ? 1 : _upParent.Sort + 1;
                 await _sysMenuRepository.AddAsync(model);
                 return result;
             }
@@ -75,7 +67,7 @@ namespace FytSoa.Application.Services
             var result = JResult<SysMenu>.Success();
             try
             {
-                result.Data = await _sysMenuRepository.GetModelAsync(m => m.Id==id);
+                result.Data = await _sysMenuRepository.GetModelAsync(m => m.Id==long.Parse(id));
                 return result;
             }
             catch (Exception ex)

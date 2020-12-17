@@ -23,9 +23,9 @@ namespace FytSoa.Infra.Common
         /// 返回唯一ID值
         /// </summary>
         /// <returns></returns>
-        public static string Id()
+        public static long Id()
         {
-            return worker.NextId().ToString();
+            return worker.NextId();
         }
     }
 }

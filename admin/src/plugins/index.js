@@ -1,12 +1,16 @@
-import VueI18nPlugin from './i18n-extend'
-import AuthorityPlugin from './authority-plugin'
-import TabsPagePlugin from './tabs-page-plugin'
+/* 公共引入,勿随意修改,修改时需经过确认 */
+import Vue from 'vue'
+import './element'
+import './support'
+import '@/styles/vab.scss'
+import '@/remixIcon'
+import '@/colorfulIcon'
+import '@/config/permission'
+import '@/utils/errorLog'
+import './vabIcon'
 
-const Plugins = {
-  install: function (Vue) {
-    Vue.use(VueI18nPlugin)
-    Vue.use(AuthorityPlugin)
-    Vue.use(TabsPagePlugin)
-  }
-}
-export default Plugins
+import Vab from '@/utils/vab'
+import VabPermissions from 'zx-layouts/Permissions'
+
+Vue.use(Vab)
+Vue.use(VabPermissions)

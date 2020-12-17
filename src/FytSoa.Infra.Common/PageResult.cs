@@ -48,6 +48,6 @@ namespace FytSoa.Infra.Common
         /// <summary>
         /// 状态值  1=true  2=false  0=默认
         /// </summary>
-        public int status { get; set; } = 0;
+        public string status { get; set; }
     }
 }

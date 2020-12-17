@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SqlSugar;
+using FytSoa.Infra.Common.Extensions;
 using Newtonsoft.Json;
+using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys
-{
+namespace FytSoa.Domain.Models.Sys {
     /// <summary>
     /// 角色表
     /// </summary>
-    [SugarTable("sys_role")]
-    public class SysRole : EntityBase<string>
-    {
+    [SugarTable ("sys_role")]
+    public class SysRole : EntityBase<long> {
 
         /// <summary>
         /// 角色名称
@@ -21,7 +20,13 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 角色父节点
         /// <summary>
-        public string ParentId { get; set; }
+        [JsonConverter (typeof (ConverterExtension), ConverterExtensionShip.UInt64)]
+        public long ParentId { get; set; }
+
+        /// <summary>
+        /// 父节点集合
+        /// <summary>
+        public string ParentIdList { get; set; }
 
         /// <summary>
         /// 角色层级

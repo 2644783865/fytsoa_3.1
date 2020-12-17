@@ -22,6 +22,7 @@ namespace FytSoa.Infra.Common.Extensions
         {
             return (dateTime.ToUniversalTime().Ticks - longTime) / samllTime;
         }
+
         /// <summary>
         /// 时间戳转换成日期
         /// </summary>
@@ -74,5 +75,27 @@ namespace FytSoa.Infra.Common.Extensions
             }
             return newRandom.ToString();
         }
+
+        /// <summary>
+        /// 将字符串转换为long类型数组
+        /// </summary>
+        /// <param name="str">如1,2,3,4,5</param>
+        /// <returns></returns>
+        public static List<long> StrToListLong(this string str)
+        {
+            var list = new List<long>();
+            if (!str.Contains(","))
+            {
+                list.Add(long.Parse(str));
+                return list;
+            }
+            var slist = str.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in slist)
+            {
+                list.Add(long.Parse(item));
+            }
+            return list;
+        }
+
     }
 }

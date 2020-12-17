@@ -1,80 +1,102 @@
 {
-  "name": "vue-antd-admin",
-  "version": "0.6.1",
-  "homepage": "https://iczer.github.io/vue-antd-admin",
+  "name": "FytSugar",
+  "version": "1.0.0",
   "private": true,
+  "author": "fyt",
+  "participants": [],
+  "homepage": "http://www.feiyit.com",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d dist -b pages -r https://gitee.com/iczer/vue-antd-admin.git",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "docs:deploy": "vuepress build docs && gh-pages -d docs/.vuepress/dist -b master -r https://gitee.com/iczer/vue-antd-admin-docs.git"
+    "build:report": "vue-cli-service build --report",
+    "globle": "npm install -g cnpm --registry=https://registry.npm.taobao.org&&cnpm i rimraf npm-check-updates nrm -g&&rimraf node_modules&&cnpm i",
+    "lint": "vue-cli-service lint --fix",
+    "lint:style": "stylelint-config-prettier-check",
+    "inspect": "vue-cli-service inspect",
+    "template": "plop",
+    "clear": "rimraf node_modules&&cnpm i&&increase-memory-limit",
+    "use:npm": "nrm use npm",
+    "use:taobao": "nrm use taobao",
+    "update": "ncu -u --concurrency 10 --timeout 80000&&cnpm i",
+    "update:globle": "ncu -g --concurrency 10 --timeout 80000",
+    "svgo": "svgo -f src/remixIcon/svg --config=svgo.yml",
+    "push": "start ./push.sh",
+    "deploy": "start ./deploy.sh",
+    "increase-memory-limit": "increase-memory-limit"
   },
-  "dependencies": {
-    "@antv/data-set": "^0.11.4",
-    "animate.css": "^4.1.0",
-    "ant-design-vue": "^1.6.2",
-    "axios": "^0.19.2",
-    "clipboard": "^2.0.6",
-    "core-js": "^3.6.5",
-    "date-fns": "^2.14.0",
-    "enquire.js": "^2.1.6",
-    "highlight.js": "^10.2.1",
-    "js-cookie": "^2.2.1",
-    "mockjs": "^1.1.0",
-    "nprogress": "^0.2.0",
-    "viser-vue": "^2.4.8",
-    "vue": "^2.6.11",
-    "vue-i18n": "^8.18.2",
-    "vue-router": "^3.3.4",
-    "vuedraggable": "^2.23.2",
-    "vuex": "^3.4.0"
+  "repository": {
+    "type": "git",
+    "url": "git+"
   },
-  "devDependencies": {
-    "@ant-design/colors": "^4.0.1",
-    "@vue/cli-plugin-babel": "^4.4.0",
-    "@vue/cli-plugin-eslint": "^4.4.0",
-    "@vue/cli-service": "^4.4.0",
-    "@vuepress/plugin-back-to-top": "^1.5.2",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-transform-remove-console": "^6.9.4",
-    "babel-polyfill": "^6.26.0",
-    "compression-webpack-plugin": "^2.0.0",
-    "deepmerge": "^4.2.2",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "fast-deep-equal": "^3.1.3",
-    "gh-pages": "^3.1.0",
-    "less-loader": "^6.1.1",
-    "style-resources-loader": "^1.3.2",
-    "vue-cli-plugin-style-resources-loader": "^0.1.4",
-    "vue-template-compiler": "^2.6.11",
-    "vuepress": "^1.5.2",
-    "webpack-theme-color-replacer": "^1.3.12",
-    "whatwg-fetch": "^3.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {
-      "no-unused-vars": "off"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 10"
-  ]
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "core-js": "^3.8.1",
+    "dayjs": "^1.9.7",
+    "element-ui": "^2.14.1",
+    "js-cookie": "^2.2.1",
+    "jsencrypt": "^3.0.0-rc.1",
+    "lodash": "^4.17.20",
+    "nprogress": "^0.2.0",
+    "qs": "^6.9.4",
+    "screenfull": "^5.0.2",
+    "vab-icon": "^0.0.1",
+    "vue": "^2.6.12",
+    "vue-router": "^3.4.9",
+    "vuex": "^3.6.0",
+    "zx-layouts": "^0.6.23",
+    "zx-templates": "^0.0.26"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.12.1",
+    "@vue/cli-plugin-babel": "^4.5.9",
+    "@vue/cli-plugin-eslint": "^4.5.9",
+    "@vue/cli-plugin-router": "^4.5.9",
+    "@vue/cli-plugin-vuex": "^4.5.9",
+    "@vue/cli-service": "^4.5.9",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "autoprefixer": "^10.0.4",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-dynamic-import-node": "^2.3.3",
+    "compression-webpack-plugin": "^7.0.0",
+    "eslint": "^7.15.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-vue": "^7.2.0",
+    "filemanager-webpack-plugin": "^2.0.5",
+    "husky": "^4.3.5",
+    "image-webpack-loader": "^7.0.1",
+    "increase-memory-limit": "^1.0.7",
+    "lint-staged": "^10.5.3",
+    "mockjs": "^1.1.0",
+    "plop": "^2.7.4",
+    "prettier": "^2.2.1",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
+    "script-ext-html-webpack-plugin": "^2.1.5",
+    "stylelint": "^13.8.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recess-order": "^2.3.0",
+    "svg-sprite-loader": "^5.1.1",
+    "svgo": "^1.3.2",
+    "vue-template-compiler": "^2.6.12",
+    "webpackbar": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=8.9",
+    "npm": ">= 3.0.0"
+  },
+  "main": "babel.config.js",
+  "keywords": [],
+  "license": "ISC",
+  "description": ""
 }

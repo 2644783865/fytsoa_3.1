@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SqlSugar;
 using Newtonsoft.Json;
+using FytSoa.Infra.Common.Extensions;
 
 namespace FytSoa.Domain.Models.Sys
 {
@@ -16,12 +17,18 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 父节点
         /// <summary>
-        public string ParentId { get; set; }
+        [JsonConverter(typeof(ConverterExtension), ConverterExtensionShip.UInt64)]
+        public long ParentId { get; set; }
 
         /// <summary>
         /// 部门名称
         /// <summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 部门编码
+        /// <summary>
+        public string Number { get; set; }
 
         /// <summary>
         /// 父节点集合
@@ -31,7 +38,7 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 部门层级
         /// <summary>
-        public int Layer { get; set; } = 0;
+        public int Layer { get; set; } = 1;
 
         /// <summary>
         /// 排序

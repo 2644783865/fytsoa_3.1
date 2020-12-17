@@ -1,117 +1,190 @@
-let path = require('path')
-const webpack = require('webpack')
-const ThemeColorReplacer = require('webpack-theme-color-replacer')
-const {getThemeColors, modifyVars} = require('./src/utils/themeUtil')
-const {resolveCss} = require('./src/utils/theme-color-replacer-extend')
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+/**
+ * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
+ * @description cli配置
+ */
 
-const productionGzipExtensions = ['js', 'css']
-const isProd = process.env.NODE_ENV === 'production'
+const path = require('path')
+const {
+  publicPath,
+  assetsDir,
+  outputDir,
+  lintOnSave,
+  transpileDependencies,
+  title,
+  abbreviation,
+  devPort,
+  providePlugin,
+  build7z,
+  donation,
+} = require('./src/config')
+const { webpackBarName, webpackBanner, donationConsole } = require('zx-layouts')
 
-const assetsCDN = {
-  // webpack build externals
-  externals: {
-    vue: 'Vue',
-    'vue-router': 'VueRouter',
-    vuex: 'Vuex',
-    axios: 'axios',
-    nprogress: 'NProgress',
-    clipboard: 'ClipboardJS',
-    '@antv/data-set': 'DataSet',
-    'js-cookie': 'Cookies'
-  },
-  css: [
-  ],
-  js: [
-    '//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
-    '//cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
-    '//cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
-    '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-    '//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js',
-    '//cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js',
-    '//cdn.jsdelivr.net/npm/@antv/data-set@0.11.4/build/data-set.min.js',
-    '//cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js'
-  ]
+if (donation) donationConsole()
+const { version, author } = require('./package.json')
+const Webpack = require('webpack')
+const WebpackBar = require('webpackbar')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
+const dayjs = require('dayjs')
+const date = dayjs().format('YYYY_M_D')
+const time = dayjs().format('YYYY-M-D HH:mm:ss')
+const productionGzipExtensions = ['html', 'js', 'css', 'svg']
+process.env.VUE_APP_TITLE = title || 'vue-admin-beautiful'
+process.env.VUE_APP_AUTHOR = author || 'chuzhixin 1204505056@qq.com'
+process.env.VUE_APP_UPDATE_TIME = time
+process.env.VUE_APP_VERSION = version
+
+const resolve = (dir) => path.join(__dirname, dir)
+const mockServer = () => {
+  if (process.env.NODE_ENV === 'development')
+    return require('./mock/mockServer.js')
+  else return ''
 }
 
 module.exports = {
+  publicPath,
+  assetsDir,
+  outputDir,
+  lintOnSave,
+  transpileDependencies,
   devServer: {
-    // proxy: {
-    //   '/api': { //此处要与 /services/api.js 中的 API_PROXY_PREFIX 值保持一致
-    //     target: process.env.VUE_APP_API_BASE_URL,
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/api': ''
-    //     }
-    //   }
-    // }
+    hot: true,
+    port: devPort,
+    open: true,
+    noInfo: false,
+    overlay: {
+      warnings: true,
+      errors: true,
+    },
+    after: mockServer(),
   },
-  pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'less',
-      patterns: [path.resolve(__dirname, "./src/theme/theme.less")],
+  configureWebpack() {
+    return {
+      resolve: {
+        alias: {
+          '@': resolve('src'),
+        },
+      },
+      plugins: [
+        new Webpack.ProvidePlugin(providePlugin),
+        new WebpackBar({
+          name: webpackBarName,
+        }),
+      ],
     }
   },
-  configureWebpack: config => {
-    config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
-    config.performance = {
-      hints: false
-    }
-    config.plugins.push(
-      new ThemeColorReplacer({
-        fileName: 'css/theme-colors-[contenthash:8].css',
-        matchColors: getThemeColors(),
-        injectCss: true,
-        resolveCss
+  chainWebpack(config) {
+    config.plugins.delete('preload')
+    config.plugins.delete('prefetch')
+    config.module
+      .rule('svg')
+      .exclude.add(resolve('src/remixIcon'))
+      .add(resolve('src/colorfulIcon'))
+      .end()
+
+    config.module
+      .rule('remixIcon')
+      .test(/\.svg$/)
+      .include.add(resolve('src/remixIcon'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({ symbolId: 'remix-icon-[name]' })
+      .end()
+
+    config.module
+      .rule('colorfulIcon')
+      .test(/\.svg$/)
+      .include.add(resolve('src/colorfulIcon'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({ symbolId: 'colorful-icon-[name]' })
+      .end()
+
+    /*  config.when(process.env.NODE_ENV === "development", (config) => {
+      config.devtool("source-map");
+    }); */
+    config.when(process.env.NODE_ENV !== 'development', (config) => {
+      config.performance.set('hints', false)
+      config.devtool('none')
+      config.optimization.splitChunks({
+        chunks: 'all',
+        cacheGroups: {
+          libs: {
+            name: 'chunk-libs',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            chunks: 'initial',
+          },
+          elementUI: {
+            name: 'chunk-elementUI',
+            priority: 20,
+            test: /[\\/]node_modules[\\/]_?element-ui(.*)/,
+          },
+          fortawesome: {
+            name: 'chunk-fortawesome',
+            priority: 20,
+            test: /[\\/]node_modules[\\/]_?@fortawesome(.*)/,
+          },
+        },
       })
-    )
-    // Ignore all locale files of moment.js
-    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
-    // 生产环境下将资源压缩成gzip格式
-    if (isProd) {
-      // add `CompressionWebpack` plugin to webpack plugins
-      config.plugins.push(new CompressionWebpackPlugin({
-        algorithm: 'gzip',
-        test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-        threshold: 10240,
-        minRatio: 0.8
-      }))
-    }
-    // if prod, add externals
-    if (isProd) {
-      config.externals = assetsCDN.externals
-    }
-  },
-  chainWebpack: config => {
-    // 生产环境下关闭css压缩的 colormin 项，因为此项优化与主题色替换功能冲突
-    if (isProd) {
-      config.plugin('optimize-css')
-        .tap(args => {
-            args[0].cssnanoOptions.preset[1].colormin = false
-          return args
+      config
+        .plugin('banner')
+        .use(Webpack.BannerPlugin, [`${webpackBanner}${time}`])
+        .end()
+      config.module
+        .rule('images')
+        .use('image-webpack-loader')
+        .loader('image-webpack-loader')
+        .options({
+          bypassOnDebug: true,
         })
-    }
-    // 生产环境下使用CDN
-    if (isProd) {
-      config.plugin('html')
-        .tap(args => {
-          args[0].cdn = assetsCDN
-        return args
+        .end()
+    })
+
+    if (build7z) {
+      config.when(process.env.NODE_ENV === 'production', (config) => {
+        config
+          .plugin('fileManager')
+          .use(FileManagerPlugin, [
+            {
+              onEnd: {
+                delete: [`./${outputDir}/video`, `./${outputDir}/data`],
+                archive: [
+                  {
+                    source: `./${outputDir}`,
+                    destination: `./${outputDir}/${abbreviation}_${outputDir}_${date}.7z`,
+                  },
+                ],
+              },
+            },
+          ])
+          .end()
       })
     }
   },
+  runtimeCompiler: true,
+  productionSourceMap: false,
   css: {
+    requireModuleExtension: true,
+    sourceMap: true,
     loaderOptions: {
-      less: {
-        lessOptions: {
-          modifyVars: modifyVars(),
-          javascriptEnabled: true
-        }
-      }
-    }
+      scss: {
+        /*sass-loader 8.0语法 */
+        //prependData: '@import "~@/styles/variables.scss";',
+
+        /*sass-loader 9.0写法，感谢github用户 shaonialife*/
+        additionalData(content, loaderContext) {
+          const { resourcePath, rootContext } = loaderContext
+          const relativePath = path.relative(rootContext, resourcePath)
+          if (
+            relativePath.replace(/\\/g, '/') !== 'src/styles/variables.scss'
+          ) {
+            return '@import "~@/styles/variables.scss";' + content
+          }
+          return content
+        },
+      },
+    },
   },
-  publicPath: isProd ? '/vue-antd-admin/' : '/',
-  outputDir: 'dist',
-  assetsDir: 'static',
-  productionSourceMap: false
 }

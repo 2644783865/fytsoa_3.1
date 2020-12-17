@@ -28,6 +28,8 @@ namespace FytSoa.Services.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            Unique.GetInstance();
+
             services.AddControllers().AddNewtonsoftJson(options => {
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });

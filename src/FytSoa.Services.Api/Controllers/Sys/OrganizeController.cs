@@ -20,31 +20,15 @@ namespace FytSoa.Services.Api.Controllers.Sys
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<SysOrganize>>> Get() => await _sysOrganizeService.GetAll();
+        public async Task<ApiResult<List<SysOrganize>>> Get(PageParam param) => await _sysOrganizeService.GetAll(param);
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public async Task<ApiResult<int>> Post([FromBody] SysOrganize m) => await _sysOrganizeService.Add(m);
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        [HttpPut]
+        public async Task<ApiResult<int>> Put([FromBody] SysOrganize m) => await _sysOrganizeService.Update(m);
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        public async Task<ApiResult<int>> Delete(string id) => await _sysOrganizeService.Delete(id);
     }
 }

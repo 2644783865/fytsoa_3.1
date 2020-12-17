@@ -1,174 +1,125 @@
+import Vue from 'vue'
 import axios from 'axios'
-import Cookie from 'js-cookie'
+import {
+  baseURL,
+  contentType,
+  debounce,
+  invalidCode,
+  noPermissionCode,
+  requestTimeout,
+  successCode,
+  tokenName,
+  loginInterception,
+} from '@/config'
+import store from '@/store'
+import qs from 'qs'
+import router from '@/router'
+import { isArray } from '@/utils/validate'
 
-// 跨域认证信息 header 名
-const xsrfHeaderName = 'Authorization'
-
-axios.defaults.timeout = 5000
-axios.defaults.withCredentials = true
-axios.defaults.xsrfHeaderName = xsrfHeaderName
-axios.defaults.xsrfCookieName = xsrfHeaderName
-
-// 认证类型
-const AUTH_TYPE = {
-  BEARER: 'Bearer',
-  BASIC: 'basic',
-  AUTH1: 'auth1',
-  AUTH2: 'auth2',
-}
-
-// http method
-const METHOD = {
-  GET: 'get',
-  POST: 'post'
-}
-
-// http url
-const URLS = {
-  TEST: 'http://10.1.1.226:5005/',
-  PRODUCE: 'http://10.1.1.226:5005/'
-}
+let loadingInstance
 
 /**
- * axios请求
- * @param url 请求地址
- * @param method {METHOD} http method
- * @param params 请求参数
- * @returns {Promise<AxiosResponse<T>>}
+ * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
+ * @description 处理code异常
+ * @param {*} code
+ * @param {*} msg
  */
-async function request(url, method, params) {
-  switch (method) {
-    case METHOD.GET:
-      return axios.get(url, { params })
-    case METHOD.POST:
-      return axios.post(url, params)
-    default:
-      return axios.get(url, { params })
-  }
-}
-
-/**
- * 设置认证信息
- * @param auth {Object}
- * @param authType {AUTH_TYPE} 认证类型，默认：{AUTH_TYPE.BEARER}
- */
-function setAuthorization(auth, authType = AUTH_TYPE.BEARER) {
-  switch (authType) {
-    case AUTH_TYPE.BEARER:
-      Cookie.set(xsrfHeaderName, 'Bearer ' + auth.token, { expires: auth.expireAt })
-      break
-    case AUTH_TYPE.BASIC:
-    case AUTH_TYPE.AUTH1:
-    case AUTH_TYPE.AUTH2:
-    default:
-      break
-  }
-}
-
-/**
- * 移出认证信息
- * @param authType {AUTH_TYPE} 认证类型
- */
-function removeAuthorization(authType = AUTH_TYPE.BEARER) {
-  switch (authType) {
-    case AUTH_TYPE.BEARER:
-      Cookie.remove(xsrfHeaderName)
-      break
-    case AUTH_TYPE.BASIC:
-    case AUTH_TYPE.AUTH1:
-    case AUTH_TYPE.AUTH2:
-    default:
-      break
-  }
-}
-
-/**
- * 检查认证信息
- * @param authType
- * @returns {boolean}
- */
-function checkAuthorization(authType = AUTH_TYPE.BEARER) {
-  switch (authType) {
-    case AUTH_TYPE.BEARER:
-      if (Cookie.get(xsrfHeaderName)) {
-        return true
+const handleCode = (code, msg) => {
+  switch (code) {
+    case invalidCode:
+      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
+      store.dispatch('user/resetAccessToken').catch(() => {})
+      if (loginInterception) {
+        location.reload()
       }
       break
-    case AUTH_TYPE.BASIC:
-    case AUTH_TYPE.AUTH1:
-    case AUTH_TYPE.AUTH2:
+    case noPermissionCode:
+      router.push({ path: '/401' }).catch(() => {})
+      break
     default:
+      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
       break
   }
-  return false
 }
 
-/**
- * 加载 axios 拦截器
- * @param interceptors
- * @param options
- */
-function loadInterceptors(interceptors, options) {
-  const { request, response } = interceptors
-  // 加载请求拦截器
-  request.forEach(item => {
-    let { onFulfilled, onRejected } = item
-    if (!onFulfilled || typeof onFulfilled !== 'function') {
-      onFulfilled = config => config
+const instance = axios.create({
+  baseURL,
+  timeout: requestTimeout,
+  headers: {
+    'Content-Type': contentType,
+  },
+})
+
+instance.interceptors.request.use(
+  (config) => {
+    if (store.getters['user/accessToken']) {
+      config.headers[tokenName] = store.getters['user/accessToken']
     }
-    if (!onRejected || typeof onRejected !== 'function') {
-      onRejected = error => Promise.reject(error)
-    }
-    axios.interceptors.request.use(
-      config => onFulfilled(config, options),
-      error => onRejected(error, options)
+    //这里会过滤所有为空、0、false的key，如果不需要请自行注释
+    if (config.data)
+      config.data = Vue.prototype.$baseLodash.pickBy(
+        config.data,
+        Vue.prototype.$baseLodash.identity
+      )
+    if (
+      config.data &&
+      config.headers['Content-Type'] ===
+        'application/x-www-form-urlencoded;charset=UTF-8'
     )
-  })
-  // 加载响应拦截器
-  response.forEach(item => {
-    let { onFulfilled, onRejected } = item
-    if (!onFulfilled || typeof onFulfilled !== 'function') {
-      onFulfilled = response => response
-    }
-    if (!onRejected || typeof onRejected !== 'function') {
-      onRejected = error => Promise.reject(error)
-    }
-    axios.interceptors.response.use(
-      response => onFulfilled(response, options),
-      error => onRejected(error, options)
-    )
-  })
-}
+      config.data = qs.stringify(config.data)
+    if (debounce.some((item) => config.url.includes(item)))
+      loadingInstance = Vue.prototype.$baseLoading()
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
-/**
- * 解析 url 中的参数
- * @param url
- * @returns {Object}
- */
-function parseUrlParams(url) {
-  const params = {}
-  if (!url || url === '' || typeof url !== 'string') {
-    return params
-  }
-  const paramsStr = url.split('?')[1]
-  if (!paramsStr) {
-    return params
-  }
-  const paramsArr = paramsStr.replace(/&|=/g, ' ').split(' ')
-  for (let i = 0; i < paramsArr.length / 2; i++) {
-    const value = paramsArr[i * 2 + 1]
-    params[paramsArr[i * 2]] = value === 'true' ? true : (value === 'false' ? false : value)
-  }
-  return params
-}
+instance.interceptors.response.use(
+  (response) => {
+    if (loadingInstance) loadingInstance.close()
 
-export {
-  METHOD,
-  AUTH_TYPE,
-  request,
-  setAuthorization,
-  removeAuthorization,
-  checkAuthorization,
-  loadInterceptors,
-  parseUrlParams
-}
+    const { data, config } = response
+    const { code, msg } = data
+    // 操作正常Code数组
+    const codeVerificationArray = isArray(successCode)
+      ? [...successCode]
+      : [...[successCode]]
+    // 是否操作正常
+    if (codeVerificationArray.includes(code)) {
+      return data
+    } else {
+      handleCode(code, msg)
+      return Promise.reject(
+        '请求异常拦截:' + JSON.stringify({ url: config.url, code, msg }) ||
+          'Error'
+      )
+    }
+  },
+  (error) => {
+    if (loadingInstance) loadingInstance.close()
+    const { response, message } = error
+    if (error.response && error.response.data) {
+      const { status, data } = response
+      handleCode(status, data.msg || message)
+      return Promise.reject(error)
+    } else {
+      let { message } = error
+      if (message === 'Network Error') {
+        message = '后端接口连接异常'
+      }
+      if (message.includes('timeout')) {
+        message = '后端接口请求超时'
+      }
+      if (message.includes('Request failed with status code')) {
+        const code = message.substr(message.length - 3)
+        message = '后端接口' + code + '异常'
+      }
+      Vue.prototype.$baseMessage(message || `后端接口未知异常`, 'error')
+      return Promise.reject(error)
+    }
+  }
+)
+
+export default instance
