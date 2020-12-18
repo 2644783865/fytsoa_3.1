@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,34 +7,24 @@ using FytSoa.Domain.Models.Sys;
 using FytSoa.Infra.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FytSoa.Services.Api.Controllers.Sys
-{
-    [Route("api/[controller]")]
-    public class MenuController : ControllerBase
-    {
-        private readonly ISysMenuService _sysMenuService;
-        public MenuController(ISysMenuService sysMenuService)
-        {
-            _sysMenuService = sysMenuService;
+namespace FytSoa.Services.Api.Controllers.Sys {
+    [Route ("api/[controller]")]
+    public class MenuController : ControllerBase {
+        private readonly ISysMenuService _menuService;
+        public MenuController (ISysMenuService menuService) {
+            _menuService = menuService;
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<SysMenu>>> Get() => await _sysMenuService.GetAll();
-
-        [HttpGet("{id}")]
-        public async Task<ApiResult<SysMenu>> Get(string id) => await _sysMenuService.GetModel(id);
+        public async Task<ApiResult<List<SysMenu>>> Get (PageParam param) => await _menuService.GetAll (param);
 
         [HttpPost]
-        public async Task<ApiResult<int>> Post([FromBody] SysMenu model) => await _sysMenuService.Add(model);
+        public async Task<ApiResult<int>> Post ([FromBody] SysMenu m) => await _menuService.Add (m);
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        [HttpPut]
+        public async Task<ApiResult<int>> Put ([FromBody] SysMenu m) => await _menuService.Update (m);
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete ("{id}")]
+        public async Task<ApiResult<int>> Delete (string id) => await _menuService.Delete (id);
     }
 }

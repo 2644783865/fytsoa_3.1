@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FytSoa.Infra.Common
-{
-    public class PageResult<T>
-    {
+namespace FytSoa.Infra.Common {
+    public class PageResult<T> {
         /// <summary>
         /// 当前页索引
         /// </summary>
@@ -35,13 +33,12 @@ namespace FytSoa.Infra.Common
     /// <summary>
     /// 查询列表分页基本参数
     /// </summary>
-    public class PageParam
-    {
+    public class PageParam {
         public int page { get; set; } = 1;
 
         public int limit { get; set; } = 15;
 
-        public string id { get; set; }
+        public long id { get; set; } = 0;
 
         public string key { get; set; }
 

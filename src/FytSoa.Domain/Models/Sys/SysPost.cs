@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SqlSugar;
 using Newtonsoft.Json;
+using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys
-{
+namespace FytSoa.Domain.Models.Sys {
     /// <summary>
     /// 岗位表
     /// </summary>
-    [SugarTable("sys_post")]
-    public class SysPost : EntityBase<string>
-    {
+    [SugarTable ("sys_post")]
+    public class SysPost : EntityBase<long> {
 
         /// <summary>
         /// 岗位名称

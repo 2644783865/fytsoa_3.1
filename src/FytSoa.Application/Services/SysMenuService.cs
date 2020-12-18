@@ -5,80 +5,95 @@ using FytSoa.Application.Interfaces;
 using FytSoa.Domain.Interfaces.Sys;
 using FytSoa.Domain.Models.Sys;
 using FytSoa.Infra.Common;
+using FytSoa.Infra.Common.Extensions;
+using LinqKit;
 
-namespace FytSoa.Application.Services
-{
-    public class SysMenuService: ISysMenuService
-    {
+namespace FytSoa.Application.Services {
+    public class SysMenuService : ISysMenuService {
         private readonly ISysMenuRepository _sysMenuRepository;
-        public SysMenuService(ISysMenuRepository sysMenuRepository)
-        {
+        public SysMenuService (ISysMenuRepository sysMenuRepository) {
             _sysMenuRepository = sysMenuRepository;
         }
 
         /// <summary>
-        /// 添加菜单
+        /// 查询所有
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<int>> Add(SysMenu model)
-        {
-            var result = JResult<int>.Success();
-            try
-            {
-                model.Id = Unique.Id();
-                if (model.ParentId != 0)
-                {
-                    var _model = await _sysMenuRepository.GetModelAsync(m => m.Id == model.ParentId);
-                    model.Layer = _model.Layer + 1;
+        public async Task<ApiResult<List<SysMenu>>> GetAll (PageParam param) {
+            var result = JResult<List<SysMenu>>.Success ();
+            try {
+                var where = PredicateBuilder.New<SysMenu> (m => true);
+                if (!string.IsNullOrEmpty (param.key)) {
+                    where.And (m => m.Name.Contains (param.key));
                 }
-                await _sysMenuRepository.AddAsync(model);
+                if (!string.IsNullOrEmpty (param.status)) {
+                    where.And (m => m.Status == bool.Parse (param.status));
+                }
+                result.Data = await _sysMenuRepository.GetListAsync (where, m => m.Sort, 1);
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return JResult<int>.Error(ex.Message);
+            } catch (Exception ex) {
+                return JResult<List<SysMenu>>.Error (ex.Message);
             }
         }
 
         /// <summary>
-        /// 查询所有菜单列表
+        /// 添加
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<List<SysMenu>>> GetAll()
-        {
-            var result = JResult<List<SysMenu>>.Success();
-            try
-            {
-                result.Data = await _sysMenuRepository.GetListAsync(m=>m.Sort,2);
+        public async Task<ApiResult<int>> Add (SysMenu model) {
+            var result = JResult<int>.Success ();
+            try {
+                model.Id = Unique.Id ();
+                if (model.ParentId != 0) {
+                    var _model = await _sysMenuRepository.GetModelAsync (m => m.Id == model.ParentId);
+                    model.Layer = _model.Layer + 1;
+                    model.ParentIdList = _model.ParentIdList + model.Id.ToString () + ",";
+                } else {
+                    model.ParentIdList = model.Id.ToString () + ',';
+                }
+                result.Data = await _sysMenuRepository.AddAsync (model);
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return JResult<List<SysMenu>>.Error(ex.Message);
+            } catch (Exception ex) {
+                return JResult<int>.Error (ex.Message);
             }
         }
 
         /// <summary>
-        /// 根据唯一编号查询菜单信息
+        /// 修改
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<SysMenu>> GetModel(string id)
-        {
-            var result = JResult<SysMenu>.Success();
-            try
-            {
-                result.Data = await _sysMenuRepository.GetModelAsync(m => m.Id==long.Parse(id));
+        public async Task<ApiResult<int>> Update (SysMenu model) {
+            var result = JResult<int>.Success ();
+            try {
+                if (model.ParentId != 0) {
+                    var _model = await _sysMenuRepository.GetModelAsync (m => m.Id == model.ParentId);
+                    model.Layer = _model.Layer + 1;
+                    model.ParentIdList = _model.ParentIdList + model.Id.ToString () + ",";
+                } else {
+                    model.ParentIdList = model.Id.ToString () + ',';
+                }
+                result.Data = await _sysMenuRepository.UpdateAsync (model);
                 return result;
-            }
-            catch (Exception ex)
-            {
-                return JResult<SysMenu>.Error(ex.Message);
+            } catch (Exception ex) {
+                return JResult<int>.Error (ex.Message);
             }
         }
 
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<int>> Delete (string ids) {
+            var result = JResult<int>.Success ();
+            try {
+                result.Data = await _sysMenuRepository.DeleteAsync (m => m.ParentIdList.Contains (ids));
+                return result;
+            } catch (Exception ex) {
+                return JResult<int>.Error (ex.Message);
+            }
+        }
+        public void Dispose () {
+            GC.SuppressFinalize (this);
         }
     }
 }

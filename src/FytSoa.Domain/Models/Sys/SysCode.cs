@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SqlSugar;
+using FytSoa.Infra.Common.Extensions;
 using Newtonsoft.Json;
+using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys
-{
+namespace FytSoa.Domain.Models.Sys {
     /// <summary>
     /// 字典值表
     /// </summary>
-    [SugarTable("sys_code")]
-    public class SysCode : EntityBase<string>
-    {
+    [SugarTable ("sys_code")]
+    public class SysCode : EntityBase<long> {
 
         /// <summary>
         /// 分类编号
         /// <summary>
-        public string TypeId { get; set; }
+        [JsonConverter (typeof (ConverterExtension), ConverterExtensionShip.UInt64)]
+        public long TypeId { get; set; }
 
         /// <summary>
         /// 字典值名称

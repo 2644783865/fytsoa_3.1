@@ -1,38 +1,38 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SqlSugar;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using FytSoa.Infra.Common;
+using FytSoa.Infra.Common.Extensions;
+using Newtonsoft.Json;
+using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys
-{
+namespace FytSoa.Domain.Models.Sys {
     /// <summary>
     /// 管理员表
     /// </summary>
-    [SugarTable("sys_admin")]
-    public class SysAdmin : EntityBase<long>
-    {
+    [SugarTable ("sys_admin")]
+    public class SysAdmin : EntityBase<long> {
         /// <summary>
         /// 所属角色
         /// <summary>
-        public string RoleId { get; set; }
+        public string RoleGroup { get; set; }
 
         /// <summary>
         /// 所属岗位
         /// <summary>
-        public string PostId { get; set; }
+        public string PostGroup { get; set; }
 
         /// <summary>
         /// 所属部门
         /// <summary>
-        public string OrganizeId { get; set; }
+        [JsonConverter (typeof (ConverterExtension), ConverterExtensionShip.UInt64)]
+        public long OrganizeId { get; set; }
 
         /// <summary>
         /// 所属上级部门组
         /// <summary>
-        public string OrganizeGroupId { get; set; }
+        public string OrganizeIdList { get; set; }
 
         /// <summary>
         /// 登录账号
@@ -44,7 +44,7 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         private string _loginPassWord;
         public string LoginPassWord {
-            get { return !string.IsNullOrEmpty(_loginPassWord)? Security.DES3Encrypt.DecryptString(_loginPassWord):_loginPassWord; }
+            get { return !string.IsNullOrEmpty (_loginPassWord) ? Security.DES3Encrypt.DecryptString (_loginPassWord) : _loginPassWord; }
 
             set { _loginPassWord = value; }
         }
@@ -107,7 +107,7 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 部门
         /// <summary>
-        [SugarColumn(IsIgnore = true)]
+        [SugarColumn (IsIgnore = true)]
         public SysOrganize organize { get; set; }
     }
 }

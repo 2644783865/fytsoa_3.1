@@ -7,7 +7,7 @@
             <el-input
               v-model="param.key"
               clearable
-              placeholder="根据审批名称搜索"
+              placeholder="根据机构名称搜索"
             ></el-input>
           </el-form-item>
           <el-form-item label="状态">
@@ -30,12 +30,11 @@
       <el-col :span="24" class="fyt-tools">
         <el-button
           type="primary"
-          icon="el-icon-edit"
+          icon="el-icon-plus"
           @click="$refs.modify.handleAdd()"
         >
           添加
         </el-button>
-        <el-button type="danger" icon="el-icon-edit">删除</el-button>
       </el-col>
       <el-col :span="24">
         <el-table
@@ -63,11 +62,16 @@
           ></el-table-column>
 
           <el-table-column prop="sort" label="排序"></el-table-column>
-          <el-table-column
-            prop="status"
-            label="状态"
-            width="100"
-          ></el-table-column>
+          <el-table-column prop="status" label="状态" width="100">
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.status ? 'success' : 'danger'"
+                disable-transitions
+              >
+                {{ scope.row.status ? '显示' : '隐藏' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="createTime"
             label="创建时间"

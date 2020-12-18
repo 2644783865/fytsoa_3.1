@@ -1,18 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SqlSugar;
-using Newtonsoft.Json;
 using FytSoa.Infra.Common.Extensions;
+using Newtonsoft.Json;
+using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys
-{
+namespace FytSoa.Domain.Models.Sys {
     /// <summary>
     /// 菜单表
     /// </summary>
-    [SugarTable("sys_menu")]
-    public class SysMenu : EntityBase<long>
-    {
+    [SugarTable ("sys_menu")]
+    public class SysMenu : EntityBase<long> {
 
         /// <summary>
         /// 菜单名称
@@ -22,13 +20,13 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 父节点
         /// <summary>
-        [JsonConverter(typeof(ConverterExtension), ConverterExtensionShip.UInt64)]
+        [JsonConverter (typeof (ConverterExtension), ConverterExtensionShip.UInt64)]
         public long ParentId { get; set; }
 
         /// <summary>
         /// 父节点集合组
         /// <summary>
-        public string ParentGroupId { get; set; }
+        public string ParentIdList { get; set; }
 
         /// <summary>
         /// 权限标识
@@ -73,15 +71,14 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         /// 菜单按钮
         /// <summary>
-        [SugarColumn(IsJson = true)]
+        [SugarColumn (IsJson = true)]
         public List<SysMenuBtnFun> BtnFun { get; set; }
     }
 
     /// <summary>
     /// 权限按钮对象信息
     /// </summary>
-    public class SysMenuBtnFun
-    {
+    public class SysMenuBtnFun {
         /// <summary>
         /// 唯一编号
         /// </summary>

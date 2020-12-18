@@ -4,8 +4,10 @@ import store from './store'
 import router from './router'
 import './plugins'
 import '@/layouts/export'
+import iconPicker from 'e-icon-picker'
+import 'e-icon-picker/dist/index.css'
+Vue.use(iconPicker, { FontAwesome: false, ElementUI: true })
 /**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
  * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
  */
 

@@ -2,14 +2,22 @@
   <div>
     <el-row class="fyt-search">
       <el-col :span="24">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="审批人">
-            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+        <el-form :inline="true" :model="param" class="demo-form-inline">
+          <el-form-item label="机构名称">
+            <el-input
+              v-model="param.key"
+              clearable
+              placeholder="根据角色名称搜索"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="活动区域">
-            <el-select v-model="formInline.region" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="状态">
+            <el-select
+              v-model="param.status"
+              clearable
+              placeholder="根据状态搜索"
+            >
+              <el-option label="正常" value="1"></el-option>
+              <el-option label="停用" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -20,135 +28,143 @@
     </el-row>
     <el-row style="padding: 15px">
       <el-col :span="24" class="fyt-tools">
-        <el-button type="primary" icon="el-icon-edit">添加</el-button>
-        <el-button type="danger" icon="el-icon-edit">删除</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="$refs.modify.handleAdd()"
+        >
+          添加
+        </el-button>
       </el-col>
       <el-col :span="24">
-        <el-table :data="tableData" :height="tableAttr.height">
-          <el-table-column
-            fixed
-            prop="date"
-            label="日期"
-            width="200"
-          ></el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="province"
-            label="省份"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="city"
-            label="市区"
-            width="120"
-          ></el-table-column>
-          <el-table-column prop="address" label="地址"></el-table-column>
-          <el-table-column
-            prop="zip"
-            label="邮编"
-            width="120"
-          ></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+        <el-table
+          :data="tableData"
+          :height="tableAttr.height"
+          row-key="id"
+          default-expand-all
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        >
+          <el-table-column fixed prop="name" label="角色名称"></el-table-column>
+          <el-table-column prop="isSystem" label="是否超管" width="140">
             <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
+              <el-tag
+                :type="scope.row.isSystem ? 'success' : 'danger'"
+                disable-transitions
               >
-                移除
-              </el-button>
+                {{ scope.row.isSystem ? '是' : '否' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            prop="sort"
+            label="排序"
+            width="100"
+          ></el-table-column>
+          <el-table-column prop="status" label="状态" width="100">
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.status ? 'success' : 'danger'"
+                disable-transitions
+              >
+                {{ scope.row.status ? '正常' : '停用' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            width="180"
+          ></el-table-column>
+          <el-table-column fixed="right" label="操作" width="160">
+            <template slot-scope="scope">
+              <el-link
+                icon="el-icon-edit"
+                :underline="false"
+                type="primary"
+                @click.native.prevent="$refs.modify.handelModify(scope.row)"
+              >
+                修改
+              </el-link>
+              <el-link
+                icon="el-icon-delete"
+                :underline="false"
+                type="danger"
+                style="margin-left: 15px"
+                @click.native.prevent="deleteRow(scope.row)"
+              >
+                删除
+              </el-link>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
+    <modify ref="modify" @complete="onComplete"></modify>
   </div>
 </template>
 <script>
+  import { getList, deletes } from '@/api/sys/role'
+  import { changeTree } from '@/utils/treeTool'
+  import modify from './modify'
   export default {
+    components: {
+      modify,
+    },
     data() {
       return {
-        formInline: {
-          user: '',
-          region: '',
+        param: {
+          key: '',
+          status: '',
         },
         tableAttr: {
           height: 300,
         },
-        tableData: [
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-        ],
+        tableData: [],
       }
     },
     created() {
       this.tableAttr.height = window.innerHeight - 275
     },
-    mounted() {},
+    mounted() {
+      this.init()
+    },
     methods: {
-      onSubmit() {
-        console.log('submit!')
+      async init() {
+        const t = await getList(this.param)
+        this.tableData = changeTree(t.data)
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1)
+      onSubmit() {
+        this.init()
+      },
+      deleteRow(rows) {
+        var _this = this
+        this.$confirm(
+          '确认删除选中记录吗？如果下面有子级，将子级一并删除！',
+          '提示',
+          {
+            type: 'warning',
+          }
+        ).then(async () => {
+          this.loading = true
+          const res = await deletes(rows.id)
+          this.loading = false
+          if (res.code == 200) {
+            this.$notify({
+              message: '删除成功',
+              type: 'success',
+            })
+            _this.init()
+          } else {
+            this.$notify({
+              message: res.message,
+              type: 'error',
+            })
+          }
+        })
+      },
+      onComplete() {
+        this.init()
       },
     },
   }

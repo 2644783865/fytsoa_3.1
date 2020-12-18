@@ -16,7 +16,7 @@ namespace FytSoa.Application.Services {
         }
 
         /// <summary>
-        /// 查询所有机构列表
+        /// 查询所有
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResult<List<SysRole>>> GetAll (PageParam param) {
@@ -37,7 +37,7 @@ namespace FytSoa.Application.Services {
         }
 
         /// <summary>
-        /// 添加机构
+        /// 添加
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResult<int>> Add (SysRole model) {
@@ -59,7 +59,7 @@ namespace FytSoa.Application.Services {
         }
 
         /// <summary>
-        /// 修改机构
+        /// 修改
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResult<int>> Update (SysRole model) {
@@ -80,7 +80,7 @@ namespace FytSoa.Application.Services {
         }
 
         /// <summary>
-        /// 删除机构
+        /// 删除
         /// </summary>
         /// <returns></returns>
         public async Task<ApiResult<int>> Delete (string ids) {

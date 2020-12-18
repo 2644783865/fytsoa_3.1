@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FytSoa.Application.Interfaces;
@@ -9,30 +9,27 @@ using FytSoa.Infra.Common.Extensions;
 using LinqKit;
 
 namespace FytSoa.Application.Services {
-    public class SysPostService : ISysPostService {
-        private readonly ISysPostRepository _sysPostRepository;
-        public SysPostService (ISysPostRepository sysPostRepository) {
-            _sysPostRepository = sysPostRepository;
+    public class SysCodeTypeService : ISysCodeTypeService {
+        private readonly ISysCodeTypeRepository _sysCodeTypeRepository;
+        public SysCodeTypeService (ISysCodeTypeRepository sysCodeTypeRepository) {
+            _sysCodeTypeRepository = sysCodeTypeRepository;
         }
 
         /// <summary>
         /// 查询所有
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<PageResult<SysPost>>> GetPages (PageParam param) {
-            var result = JResult<PageResult<SysPost>>.Success ();
+        public async Task<ApiResult<PageResult<SysCodeType>>> GetPages (PageParam param) {
+            var result = JResult<PageResult<SysCodeType>>.Success ();
             try {
-                var where = PredicateBuilder.New<SysPost> (m => true);
+                var where = PredicateBuilder.New<SysCodeType> (m => true);
                 if (!string.IsNullOrEmpty (param.key)) {
                     where.And (m => m.Name.Contains (param.key));
                 }
-                if (!string.IsNullOrEmpty (param.status)) {
-                    where.And (m => m.Status == bool.Parse (param.status));
-                }
-                result.Data = await _sysPostRepository.GetPageResult (where, m => m.Sort, 1, param.page, param.limit);
+                result.Data = await _sysCodeTypeRepository.GetPageResult (where, m => m.Sort, 1, param.page, param.limit);
                 return result;
             } catch (Exception ex) {
-                return JResult<PageResult<SysPost>>.Error (ex.Message);
+                return JResult<PageResult<SysCodeType>>.Error (ex.Message);
             }
         }
 
@@ -40,11 +37,11 @@ namespace FytSoa.Application.Services {
         /// 添加
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<int>> Add (SysPost model) {
+        public async Task<ApiResult<int>> Add (SysCodeType model) {
             var result = JResult<int>.Success ();
             try {
                 model.Id = Unique.Id ();
-                result.Data = await _sysPostRepository.AddAsync (model);
+                result.Data = await _sysCodeTypeRepository.AddAsync (model);
                 return result;
             } catch (Exception ex) {
                 return JResult<int>.Error (ex.Message);
@@ -55,10 +52,10 @@ namespace FytSoa.Application.Services {
         /// 修改
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResult<int>> Update (SysPost model) {
+        public async Task<ApiResult<int>> Update (SysCodeType model) {
             var result = JResult<int>.Success ();
             try {
-                result.Data = await _sysPostRepository.UpdateAsync (model);
+                result.Data = await _sysCodeTypeRepository.UpdateAsync (model);
                 return result;
             } catch (Exception ex) {
                 return JResult<int>.Error (ex.Message);
@@ -72,7 +69,7 @@ namespace FytSoa.Application.Services {
         public async Task<ApiResult<int>> Delete (string ids) {
             var result = JResult<int>.Success ();
             try {
-                result.Data = await _sysPostRepository.DeleteAsync (m => ids.StrToListLong ().Contains (m.Id));
+                result.Data = await _sysCodeTypeRepository.DeleteAsync (m => ids.StrToListLong ().Contains (m.Id));
                 return result;
             } catch (Exception ex) {
                 return JResult<int>.Error (ex.Message);
