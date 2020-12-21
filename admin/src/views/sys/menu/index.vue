@@ -21,7 +21,9 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" icon="el-icon-zoom-in" @click="onSubmit">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -35,13 +37,25 @@
         >
           添加
         </el-button>
+        <el-button type="success" icon="el-icon-finished" @click="openAll">
+          展开所有
+        </el-button>
+        <el-button
+          type="warning"
+          icon="el-icon-c-scale-to-original"
+          @click="closeAll"
+        >
+          合并所有
+        </el-button>
       </el-col>
       <el-col :span="24">
         <el-table
+          v-if="tableAttr.refresh"
+          v-loading="loading"
           :data="tableData"
           :height="tableAttr.height"
           row-key="id"
-          default-expand-all
+          :default-expand-all="tableAttr.expand"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column prop="name" label="菜单名称"></el-table-column>
@@ -127,7 +141,7 @@
                 :underline="false"
                 type="danger"
                 style="margin-left: 15px"
-                @click="deletes(scope.row)"
+                @click="deleteRow(scope.row)"
               >
                 删除
               </el-link>
@@ -140,7 +154,7 @@
   </div>
 </template>
 <script>
-  import { getList, deletes } from '@/api/sys/menu'
+  import { getList, deletes, colSort } from '@/api/sys/menu'
   import { changeTree } from '@/utils/treeTool'
   import modify from './modify'
   export default {
@@ -155,6 +169,8 @@
         },
         tableAttr: {
           height: 300,
+          expand: true,
+          refresh: true,
         },
         loading: true,
         tableData: [],
@@ -180,6 +196,7 @@
       async init() {
         const t = await getList(this.param)
         this.tableData = changeTree(t.data)
+        this.loading = false
       },
       onSubmit() {
         this.init()
@@ -209,6 +226,24 @@
             })
           }
         })
+      },
+      openAll() {
+        this.tableAttr.refresh = false
+        this.tableAttr.expand = true
+        this.$nextTick(() => {
+          this.tableAttr.refresh = true
+        })
+      },
+      closeAll() {
+        this.tableAttr.refresh = false
+        this.tableAttr.expand = false
+        this.$nextTick(() => {
+          this.tableAttr.refresh = true
+        })
+      },
+      async sort(m) {
+        await colSort(m)
+        this.init()
       },
       onComplete() {
         this.init()

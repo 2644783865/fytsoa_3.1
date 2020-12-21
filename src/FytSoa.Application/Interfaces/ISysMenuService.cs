@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FytSoa.Application.ViewModels;
 using FytSoa.Domain.Models.Sys;
 using FytSoa.Infra.Common;
 
@@ -29,5 +30,12 @@ namespace FytSoa.Application.Interfaces {
         /// </summary>
         /// <returns></returns>
         Task<ApiResult<int>> Delete (string ids);
+
+        /// <summary>
+        /// 自定义排序
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        Task<ApiResult<int>> ColSort (SortParam param);
     }
 }

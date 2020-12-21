@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FytSoa.Application.Interfaces;
+using FytSoa.Application.ViewModels;
 using FytSoa.Domain.Models.Sys;
 using FytSoa.Infra.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,9 @@ namespace FytSoa.Services.Api.Controllers.Sys {
 
         [HttpPost]
         public async Task<ApiResult<int>> Post ([FromBody] SysMenu m) => await _menuService.Add (m);
+
+        [HttpPost ("Sort")]
+        public async Task<ApiResult<int>> Sort ([FromBody] SortParam m) => await _menuService.ColSort (m);
 
         [HttpPut]
         public async Task<ApiResult<int>> Put ([FromBody] SysMenu m) => await _menuService.Update (m);

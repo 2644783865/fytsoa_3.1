@@ -2,153 +2,235 @@
   <div>
     <el-row class="fyt-search">
       <el-col :span="24">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="审批人">
-            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+        <el-form :inline="true" :model="param" class="demo-form-inline">
+          <el-form-item label="关键字">
+            <el-input
+              v-model="param.key"
+              clearable
+              placeholder="可根据姓名、手机搜索"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="活动区域">
-            <el-select v-model="formInline.region" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="用户状态">
+            <el-select v-model="param.status" clearable placeholder="用户状态">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" icon="el-icon-zoom-in" @click="onSubmit">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <el-row style="padding: 15px">
       <el-col :span="24" class="fyt-tools">
-        <el-button type="primary" icon="el-icon-edit">添加</el-button>
-        <el-button type="danger" icon="el-icon-edit">删除</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="$refs.modify.handleAdd()"
+        >
+          添加
+        </el-button>
+        <el-button type="danger" icon="el-icon-delete" @click="delSelect">
+          删除
+        </el-button>
       </el-col>
       <el-col :span="24">
-        <el-table :data="tableData" :height="tableAttr.height">
+        <el-table
+          ref="multipleTable"
+          v-loading="loading"
+          :data="tableData.items"
+          row-key="id"
+          :height="tableAttr.height"
+        >
           <el-table-column
-            fixed
-            prop="date"
-            label="日期"
-            width="200"
+            type="selection"
+            fixed="left"
+            width="55"
           ></el-table-column>
           <el-table-column
-            prop="name"
+            type="index"
+            fixed="left"
+            width="80"
+            label="序号"
+          ></el-table-column>
+          <el-table-column
+            prop="fullName"
+            fixed="left"
+            width="100"
             label="姓名"
+          ></el-table-column>
+          <el-table-column
+            prop="loginAccount"
+            label="登录账号"
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="province"
-            label="省份"
+            prop="organizeName"
+            label="所属部门"
             width="120"
           ></el-table-column>
+          <el-table-column prop="sex" label="性别" width="80"></el-table-column>
           <el-table-column
-            prop="city"
-            label="市区"
-            width="120"
+            prop="mobile"
+            label="手机号码"
+            width="180"
           ></el-table-column>
-          <el-table-column prop="address" label="地址"></el-table-column>
-          <el-table-column
-            prop="zip"
-            label="邮编"
-            width="120"
-          ></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column prop="status" label="状态" width="180">
             <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
+              <el-link
+                :underline="false"
+                :type="scope.row.status ? 'primary' : 'warning'"
               >
-                移除
-              </el-button>
+                {{ scope.row.status ? '正常' : '停用' }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            width="180"
+          ></el-table-column>
+          <el-table-column fixed="right" label="操作" width="140">
+            <template slot-scope="scope">
+              <el-link
+                icon="el-icon-edit"
+                :underline="false"
+                type="primary"
+                @click="$refs.modify.handelModify(scope.row)"
+              >
+                修改
+              </el-link>
+              <el-link
+                icon="el-icon-delete"
+                :underline="false"
+                type="danger"
+                style="margin-left: 15px"
+                @click="deleteRow(scope.row)"
+              >
+                删除
+              </el-link>
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          background
+          :current-page="tableData.currentPage"
+          :page-sizes="[10, 20, 50, 100, 200, 500, 1000]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.totalItems"
+          style="text-align: right"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
       </el-col>
+      <modify ref="modify" @complete="onComplete"></modify>
     </el-row>
   </div>
 </template>
 <script>
+  import { getList, deletes } from '@/api/sys/admin'
+  import modify from './modify'
   export default {
+    components: {
+      modify,
+    },
     data() {
       return {
-        formInline: {
-          user: '',
-          region: '',
+        param: {
+          key: '',
+          status: '',
+          limit: 10,
+          page: 1,
         },
         tableAttr: {
-          height: 300,
+          height: window.innerHeight - 275,
         },
-        tableData: [
+        tableData: [],
+        options: [
           {
-            date: '2016-05-03',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
+            value: 1,
+            label: '正常',
           },
           {
-            date: '2016-05-02',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
+            value: 0,
+            label: '停用',
           },
         ],
+        loading: true,
       }
     },
-    created() {
-      this.tableAttr.height = window.innerHeight - 275
+    created() {},
+    mounted() {
+      this.init()
     },
-    mounted() {},
     methods: {
-      onSubmit() {
-        console.log('submit!')
+      async init() {
+        const t = await getList(this.param)
+        this.tableData = t.data
+        this.loading = false
       },
-      deleteRow(index, rows) {
-        rows.splice(index, 1)
+      onSubmit() {
+        this.init()
+      },
+      deleteRow(rows) {
+        this.delSubmit(rows.id)
+      },
+      delSelect() {
+        const _selectData = this.$refs.multipleTable.selection
+        let ids = []
+        _selectData.forEach((element) => {
+          ids.push(element.id)
+        })
+        if (ids.length == 0) {
+          this.$notify({
+            message: '请选择要删除的项~',
+            type: 'warning',
+          })
+          return
+        }
+        this.delSubmit(ids.join(','))
+      },
+      delSubmit(parm) {
+        var _this = this
+        this.$confirm('确认删除选中用户信息吗？', '提示', {
+          type: 'warning',
+        }).then(async () => {
+          this.loading = true
+          const res = await deletes(parm)
+          this.loading = false
+          if (res.code == 200) {
+            this.$notify({
+              message: '删除成功',
+              type: 'success',
+            })
+            _this.init()
+          } else {
+            this.$notify({
+              message: res.message,
+              type: 'error',
+            })
+          }
+        })
+      },
+      handleSizeChange(val) {
+        this.param.page = 1
+        this.param.limit = val
+        this.init()
+      },
+      handleCurrentChange(val) {
+        this.param.page = val
+        this.init()
+      },
+      onComplete() {
+        this.init()
       },
     },
   }

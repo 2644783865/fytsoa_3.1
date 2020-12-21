@@ -19,6 +19,11 @@ namespace FytSoa.Domain.Models.Sys {
         public string RoleGroup { get; set; }
 
         /// <summary>
+        /// 所属角色,包含父级
+        /// <summary>
+        public string RoleGroupParent { get; set; }
+
+        /// <summary>
         /// 所属岗位
         /// <summary>
         public string PostGroup { get; set; }

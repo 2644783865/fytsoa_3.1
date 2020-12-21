@@ -13,6 +13,13 @@ export function add(data) {
     data,
   })
 }
+export function colSort(data) {
+  return request({
+    url: 'api/menu/sort',
+    method: 'post',
+    data,
+  })
+}
 export function update(data) {
   return request({
     url: 'api/menu',

@@ -33,7 +33,6 @@
                 :key="index"
                 :label="item.value"
                 :disabled="item.disabled"
-                @change="typesChange"
               >
                 {{ item.label }}
               </el-radio>
@@ -106,17 +105,22 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="排序" prop="sort" required>
-            <el-slider v-model="formData.sort" :max="100" :step="1"></el-slider>
+            <el-slider
+              v-model="formData.sort"
+              :max="100"
+              :step="1"
+              show-input
+            ></el-slider>
           </el-form-item>
         </el-col>
-        <el-col v-show="formData.types == 2" :span="24">
+        <el-col v-if="formData.types == 2" :span="24">
           <el-form-item label="按钮权限" :required="formData.types == 2">
             <el-checkbox-group v-model="formData.btnFun" size="medium">
               <el-checkbox
                 v-for="(item, index) in btnFunOptions"
                 :key="index"
                 :label="item.id"
-                :disabled="item.disabled"
+                :checked="cbkSelect(item)"
               >
                 {{ item.name }}
               </el-checkbox>
@@ -268,12 +272,34 @@
         const _code = await getCodeList({ id: '1258647245457330176' })
         this.btnFunOptions = _code.data.items
       },
-      typesChange(m) {},
+      cbkSelect(m) {
+        let st = false
+        this.formData.btnFun.forEach(function (item, i) {
+          if (item.id == m.id) {
+            st = true
+            return true
+          }
+        })
+        return st
+      },
       onClose() {
+        this.formData = {
+          id: undefined,
+          parent: [],
+          types: 1,
+          status: true,
+          icon: undefined,
+          name: undefined,
+          code: undefined,
+          urls: undefined,
+          sort: 1,
+          btnFun: [],
+        }
         this.$refs['elForm'].resetFields()
       },
       close() {
         this.dialogVisible = false
+        this.onClose()
         this.$emit('update:visible', false)
       },
       handleAdd() {
@@ -284,6 +310,7 @@
       },
       handelModify(record) {
         this.initTree()
+        this.tempModel = record
         record.parent = []
         var str = record.parentIdList.split(',')
         str.forEach(function (item, i) {
@@ -304,8 +331,24 @@
           const _parentList = this.formData.parent.join(',')
           this.formData.parentId = this.formData.parent.pop()
           this.formData.parentIdList = _parentList
-          console.log(this.formData)
+          //console.log(this.formData)
           //return
+          var _this = this
+          if (this.formData.types == 2) {
+            let btnArr = []
+            this.formData.btnFun.forEach(function (item, i) {
+              _this.btnFunOptions.forEach(function (row, j) {
+                if (item == row.id) {
+                  btnArr.push({
+                    id: row.id,
+                    name: row.name,
+                    value: row.codeValues,
+                  })
+                }
+              })
+            })
+            this.formData.btnFun = btnArr
+          }
           let tipName = '添加成功'
           let res = null
           if (this.formData.id == '0') {
