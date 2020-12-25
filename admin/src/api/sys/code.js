@@ -26,3 +26,31 @@ export function deletes(data) {
     method: 'delete',
   })
 }
+
+export function columnList(params) {
+  return request({
+    url: 'api/code/column',
+    method: 'get',
+    params,
+  })
+}
+export function addColumn(data) {
+  return request({
+    url: 'api/code/column',
+    method: 'post',
+    data,
+  })
+}
+export function updateColumn(data) {
+  return request({
+    url: 'api/code/column',
+    method: 'put',
+    data,
+  })
+}
+export function deletesColumn(data) {
+  return request({
+    url: 'api/code/column/' + data,
+    method: 'delete',
+  })
+}

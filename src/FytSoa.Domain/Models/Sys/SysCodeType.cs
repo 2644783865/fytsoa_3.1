@@ -5,18 +5,25 @@ using FytSoa.Infra.Common.Extensions;
 using Newtonsoft.Json;
 using SqlSugar;
 
-namespace FytSoa.Domain.Models.Sys {
+namespace FytSoa.Domain.Models.Sys
+{
     /// <summary>
     /// 字典类型表
     /// </summary>
-    [SugarTable ("sys_codetype")]
-    public class SysCodeType : EntityBase<long> {
+    [SugarTable("sys_codetype")]
+    public class SysCodeType : EntityBase<long>
+    {
 
         /// <summary>
         /// 父节点
         /// <summary>
-        [JsonConverter (typeof (ConverterExtension), ConverterExtensionShip.UInt64)]
+        [JsonConverter(typeof(ConverterExtension), ConverterExtensionShip.UInt64)]
         public long ParentId { get; set; }
+
+        /// <summary>
+        /// 父节点结合
+        /// <summary>
+        public string ParentIdList { get; set; }
 
         /// <summary>
         /// 层级
