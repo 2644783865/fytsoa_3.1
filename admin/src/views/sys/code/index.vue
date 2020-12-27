@@ -54,57 +54,94 @@
           <el-col :span="24" class="fyt-tools">
             <el-button
               type="primary"
-              icon="el-icon-edit"
+              icon="el-icon-plus"
               @click="$refs.modifycolumn.handleAdd()"
             >
               添加字典栏目
             </el-button>
-            <el-button type="primary" icon="el-icon-edit" @click="addCode">
-              添加值
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              :disabled="!vname"
+              @click="addCode"
+            >
+              添加{{ vname ? '【' + vname + '】' : '' }}值
             </el-button>
-            <el-button type="danger" icon="el-icon-edit">删除值</el-button>
+            <el-button type="danger" icon="el-icon-edit" @click="delSelect">
+              删除值
+            </el-button>
           </el-col>
           <el-col :span="24">
-            <el-table :data="tableData" :height="tableAttr.height">
+            <el-table
+              ref="multipleTable"
+              v-loading="tableAttr.loading"
+              :data="tableData.items"
+              :height="tableAttr.height"
+            >
+              <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column
-                fixed
-                prop="date"
-                label="日期"
-                width="200"
+                type="index"
+                width="80"
+                label="序号"
+              ></el-table-column>
+              <el-table-column prop="name" label="字典名称"></el-table-column>
+              <el-table-column
+                prop="codeValues"
+                label="字典阔值"
+                width="180"
               ></el-table-column>
               <el-table-column
-                prop="name"
-                label="姓名"
-                width="120"
+                prop="sort"
+                label="排序"
+                width="80"
               ></el-table-column>
-              <el-table-column
-                prop="province"
-                label="省份"
-                width="120"
-              ></el-table-column>
-              <el-table-column
-                prop="city"
-                label="市区"
-                width="120"
-              ></el-table-column>
-              <el-table-column prop="address" label="地址"></el-table-column>
-              <el-table-column
-                prop="zip"
-                label="邮编"
-                width="120"
-              ></el-table-column>
-              <el-table-column fixed="right" label="操作" width="120">
+              <el-table-column prop="status" label="状态" width="100">
                 <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    size="small"
-                    @click.native.prevent="deleteRow(scope.$index, tableData)"
+                  <el-link
+                    :underline="false"
+                    :type="scope.row.status ? 'primary' : 'warning'"
                   >
-                    移除
-                  </el-button>
+                    {{ scope.row.status ? '启用' : '停用' }}
+                  </el-link>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="createTime"
+                label="创建时间"
+                width="180"
+              ></el-table-column>
+              <el-table-column fixed="right" label="操作" width="160">
+                <template slot-scope="scope">
+                  <el-link
+                    icon="el-icon-edit"
+                    :underline="false"
+                    type="primary"
+                    @click="$refs.modify.handelModify(scope.row)"
+                  >
+                    修改
+                  </el-link>
+                  <el-link
+                    icon="el-icon-delete"
+                    :underline="false"
+                    type="danger"
+                    style="margin-left: 15px"
+                    @click="deletes(scope.row)"
+                  >
+                    删除
+                  </el-link>
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination
+              style="text-align: right"
+              :current-page="tableData.currentPage"
+              :page-sizes="[10, 20, 50, 100, 200, 500, 1000]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="tableData.totalItems"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            ></el-pagination>
           </el-col>
         </el-row>
       </el-col>
@@ -136,24 +173,32 @@
         param: {
           key: '',
           status: '',
+          limit: 10,
+          page: 1,
+          id: '0',
         },
         selectColumn: {},
         tableAttr: {
           height: 300,
+          loading: true,
         },
+        sourceData: [],
         tableData: [],
         treeData: [],
+        vname: '',
       }
     },
     created() {
-      this.tableAttr.height = window.innerHeight - 275
+      this.tableAttr.height = window.innerHeight - 325
     },
     mounted() {
       this.init()
+      this.initCode()
     },
     methods: {
       async init() {
         const t = await columnList()
+        this.sourceData = t.data
         let _tree = []
         t.data.some((m) => {
           _tree.push({
@@ -164,7 +209,16 @@
           })
         })
         this.treeData = changeTree(_tree)
-        console.log(this.treeData)
+        //console.log(this.sourceData)
+      },
+      async initCode() {
+        this.tableAttr.loading = true
+        if (this.selectColumn && this.selectColumn.id) {
+          this.param.id = this.selectColumn.id
+        }
+        const t = await getCodeList(this.param)
+        this.tableData = t.data
+        this.tableAttr.loading = false
       },
       onSubmit() {
         this.init()
@@ -189,22 +243,103 @@
         }
         this.$refs.modify.handleAdd(this.selectColumn)
       },
+      handleSizeChange(val) {
+        this.param.page = 1
+        this.param.limit = val
+        this.initCode()
+      },
+      handleCurrentChange(val) {
+        this.param.page = val
+        this.initCode()
+      },
       onColumnComplete() {
         this.init()
       },
-      onComplete() {},
+      onComplete() {
+        this.initCode()
+      },
       deleteRow(index, rows) {
-        rows.splice(index, 1)
+        this.delSubmit(rows.id)
+      },
+      delSelect() {
+        const _selectData = this.$refs.multipleTable.selection
+        let ids = []
+        _selectData.forEach((element) => {
+          ids.push(element.id)
+        })
+        if (ids.length == 0) {
+          this.$notify({
+            message: '请选择要删除的项~',
+            type: 'warning',
+          })
+          return
+        }
+        this.delSubmit(ids.join(','))
+      },
+      delSubmit(parm) {
+        var _this = this
+        this.$confirm('确认要删除字典值吗？', '提示', {
+          type: 'warning',
+        }).then(async () => {
+          this.loading = true
+          const res = await deletes(parm)
+          this.loading = false
+          if (res.code == 200) {
+            this.$notify({
+              message: '删除成功',
+              type: 'success',
+            })
+            _this.initCode()
+          } else {
+            this.$notify({
+              message: res.message,
+              type: 'error',
+            })
+          }
+        })
       },
       columnnode(data, node, e) {
         this.selectColumn = data
+        if (!data.children || data.children.length == 0) {
+          this.vname = data.label
+        } else {
+          this.vname = ''
+        }
+        this.initCode()
       },
-      append(data, e) {
-        e.cancelBubble = true
-        $refs.modifytype.handelModify(data)
+      append(data) {
+        var _model = {}
+        this.sourceData.forEach((item) => {
+          if (item.id == data.id) {
+            _model = item
+          }
+        })
+        this.$refs.modifycolumn.handelModify(_model)
       },
-      remove(node, data, e) {
-        alert('delete')
+      deletes(data) {
+        this.delSubmit(data.id)
+      },
+      remove(node, data) {
+        var _this = this
+        this.$confirm('确认要删除当前的字典栏目吗？', '提示', {
+          type: 'warning',
+        }).then(async () => {
+          this.loading = true
+          const res = await deletesColumn(data.id)
+          this.loading = false
+          if (res.code == 200) {
+            this.$notify({
+              message: '删除成功',
+              type: 'success',
+            })
+            _this.init()
+          } else {
+            this.$notify({
+              message: res.message,
+              type: 'error',
+            })
+          }
+        })
       },
       renderContent(h, { node, data, store }) {
         return (
@@ -214,12 +349,12 @@
               <el-button
                 icon="el-icon-edit"
                 type="text"
-                on-click={() => this.append(data, $event)}
+                on-click={() => this.append(data)}
               ></el-button>
               <el-button
                 icon="el-icon-delete"
                 type="text"
-                on-click={() => this.remove(node, data, $event)}
+                on-click={() => this.remove(node, data)}
               ></el-button>
             </span>
           </span>
@@ -256,7 +391,7 @@
   .code-right {
     left: 260px;
     position: relative;
-    width: auto;
+    width: calc(100% - 260px);
     top: 0;
     bottom: 0;
     right: 0;
@@ -281,6 +416,8 @@
   .cur-tree .tool {
     display: inline-block;
     padding-right: 10px;
+    position: relative;
+    z-index: 10;
   }
   .cur-tree .tool button {
     margin-left: 10px;

@@ -127,6 +127,7 @@
       handelModify(record) {
         this.initTree()
         record.parent = []
+        console.log(record)
         var str = record.parentIdList.split(',')
         str.forEach(function (item, i) {
           if (item != record.id && item) {
