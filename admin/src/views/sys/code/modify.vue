@@ -16,10 +16,10 @@
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="字典阔值" prop="codeValues">
+      <el-form-item label="字典阈值" prop="codeValues">
         <el-input
           v-model="formData.codeValues"
-          placeholder="请输入字典阔值，如A、B"
+          placeholder="请输入字典阈值，如A、B"
           :maxlength="30"
           show-word-limit
           clearable
@@ -81,7 +81,7 @@
           codeValues: [
             {
               required: true,
-              message: '请输入字典阔值，如A、B',
+              message: '请输入字典阈值，如A、B',
               trigger: 'blur',
             },
           ],

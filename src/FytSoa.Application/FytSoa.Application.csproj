@@ -14,6 +14,7 @@
     <Folder Include="AutoMapper\" />
     <Folder Include="Filters\" />
     <Folder Include="Authorize\" />
+    <Folder Include="Services\Sys\" />
   </ItemGroup>
 
   <ItemGroup>

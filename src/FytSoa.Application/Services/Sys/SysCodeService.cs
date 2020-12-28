@@ -24,10 +24,13 @@ namespace FytSoa.Application.Services {
             try {
                 var where = PredicateBuilder.New<SysCode> (m => true);
                 if (!string.IsNullOrEmpty (param.key)) {
-                    where.And (m => m.Name.Contains (param.key));
+                    where.And (m => m.Name.Contains (param.key) || m.CodeValues.Contains (param.key));
                 }
                 if (param.id != 0) {
                     where.And (m => m.TypeId == param.id);
+                }
+                if (!string.IsNullOrEmpty (param.status)) {
+                    where.And (m => m.Status == (param.status == "1" ? true : false));
                 }
                 result.Data = await _sysCodeRepository.GetPageResult (where, m => m.Sort, 1, param.page, param.limit);
                 return result;

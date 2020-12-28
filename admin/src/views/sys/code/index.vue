@@ -67,7 +67,7 @@
             >
               添加{{ vname ? '【' + vname + '】' : '' }}值
             </el-button>
-            <el-button type="danger" icon="el-icon-edit" @click="delSelect">
+            <el-button type="danger" icon="el-icon-delete" @click="delSelect">
               删除值
             </el-button>
           </el-col>
@@ -84,10 +84,14 @@
                 width="80"
                 label="序号"
               ></el-table-column>
-              <el-table-column prop="name" label="字典名称"></el-table-column>
+              <el-table-column
+                prop="name"
+                width="200"
+                label="字典名称"
+              ></el-table-column>
               <el-table-column
                 prop="codeValues"
-                label="字典阔值"
+                label="字典阈值"
                 width="180"
               ></el-table-column>
               <el-table-column
@@ -110,7 +114,7 @@
                 label="创建时间"
                 width="180"
               ></el-table-column>
-              <el-table-column fixed="right" label="操作" width="160">
+              <el-table-column fixed="right" label="操作" width="140">
                 <template slot-scope="scope">
                   <el-link
                     icon="el-icon-edit"
@@ -221,7 +225,7 @@
         this.tableAttr.loading = false
       },
       onSubmit() {
-        this.init()
+        this.initCode()
       },
       addCode() {
         if (!this.selectColumn.id) {
@@ -411,7 +415,7 @@
     background: transparent;
   }
   .el-tree-node__content {
-    height: 33px;
+    height: 35px;
   }
   .cur-tree .tool {
     display: inline-block;

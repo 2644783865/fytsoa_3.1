@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FytSoa.Application.Filters;
 using FytSoa.Infra.Common;
 using FytSoa.Infra.CrossCutting;
 using FytSoa.Services.Api.Configurations;
@@ -12,67 +13,61 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace FytSoa.Services.Api
-{
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
+namespace FytSoa.Services.Api {
+    public class Startup {
+        public Startup (IConfiguration configuration) {
             Configuration = configuration;
 
             //reg appsetting
-            AppSettingConfig.InitConfig(configuration);
+            AppSettingConfig.InitConfig (configuration);
         }
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            Unique.GetInstance();
+        public void ConfigureServices (IServiceCollection services) {
+            Unique.GetInstance ();
 
-            services.AddControllers().AddNewtonsoftJson(options => {
+            services.AddControllers (options => {
+                options.Filters.Add (typeof (AuditLogActionFilter));
+            }).AddNewtonsoftJson (options => {
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
 
             // Register DI
-            BootStrapperIoC.RegisterServices(services);
+            BootStrapperIoC.RegisterServices (services);
 
             // Swagger Config
-            services.AddSwaggerConfiguration();
+            services.AddSwaggerConfiguration ();
 
             // Jwt Config
-            services.AddJwtConfiguration();
+            services.AddJwtConfiguration ();
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+            if (env.IsDevelopment ()) {
+                app.UseDeveloperExceptionPage ();
             }
 
             ServiceLocator.Instance = app.ApplicationServices;
 
-            app.UseJwtSetup();
+            app.UseJwtSetup ();
 
-            app.UseRouting();
+            app.UseRouting ();
 
-            app.UseCors(c =>
-            {
-                c.AllowAnyHeader();
-                c.AllowAnyMethod();
-                c.AllowAnyOrigin();
+            app.UseCors (c => {
+                c.AllowAnyHeader ();
+                c.AllowAnyMethod ();
+                c.AllowAnyOrigin ();
             });
 
-            app.UseAuthorization();
+            app.UseAuthorization ();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+            app.UseEndpoints (endpoints => {
+                endpoints.MapControllers ();
             });
 
-            app.UseSwaggerSetup();
+            app.UseSwaggerSetup ();
         }
     }
 }

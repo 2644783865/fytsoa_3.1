@@ -151,7 +151,7 @@
           page: 1,
         },
         tableAttr: {
-          height: window.innerHeight - 275,
+          height: window.innerHeight - 325,
         },
         tableData: [],
         options: [
