@@ -2,57 +2,88 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
+using FytSoa.Application.Interfaces;
+using FytSoa.Domain.Models.Sys;
+using FytSoa.Infra.Common;
+using FytSoa.Infra.Common.Logger;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 
-namespace FytSoa.Application.Filters {
-    public class AuditLogActionFilter : IAsyncActionFilter {
-        public AuditLogActionFilter () { }
-        public async Task OnActionExecutionAsync (ActionExecutingContext context, ActionExecutionDelegate next) {
+namespace FytSoa.Application.Filters
+{
+    public class AuditLogActionFilter : IAsyncActionFilter
+    {
+        private ISysLogService _logService;
+        public AuditLogActionFilter(ISysLogService logService)
+        {
+            _logService = logService;
+        }
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        {
             // 判断是否写日志
             // if (false) {
             //     await next ();
             //     return;
             // }
             //接口Type
-            var type = (context.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo.AsType ();
+            var type = (context.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo.AsType();
             //方法信息
             var method = (context.ActionDescriptor as ControllerActionDescriptor).MethodInfo;
             //方法参数
             var arguments = context.ActionArguments;
             //开始计时
-            var stopwatch = Stopwatch.StartNew ();
+            var stopwatch = Stopwatch.StartNew();
             //构建实体
-            var logInfo = new AuditLogInfo () { };
+            var logInfo = new SysLog()
+            {
+                LogType = 1,
+                Module = type != null ? type.FullName : "",
+                Method = context.HttpContext.Request.Method,
+                OperateUser = "",
+                Parameters = JsonConvert.SerializeObject(arguments),
+                IP = context.HttpContext.Connection.RemoteIpAddress.ToString(),
+                Address = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString,
+                Browser = context.HttpContext.Request.Headers["User-Agent"].ToString(),
+            };
+            //Logger.Default.Error(JsonConvert.SerializeObject(logInfo));
             ActionExecutedContext result = null;
-            try {
-                result = await next ();
-                if (result.Exception != null && !result.ExceptionHandled) {
-                    logInfo.Exception = result.Exception;
+            try
+            {
+                result = await next();
+                if (result.Exception != null && !result.ExceptionHandled)
+                {
+                    logInfo.Message = result.Exception.Message;
                 }
-            } catch (Exception ex) {
-                logInfo.Exception = ex;
+            }
+            catch (Exception ex)
+            {
+                logInfo.Message = ex.Message;
                 throw;
-            } finally {
-                stopwatch.Stop ();
-                logInfo.ExecutionDuration = Convert.ToInt32 (stopwatch.Elapsed.TotalMilliseconds);
-                if (result != null) {
-                    switch (result.Result) {
+            }
+            finally
+            {
+                stopwatch.Stop();
+                logInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
+                if (result != null)
+                {
+                    switch (result.Result)
+                    {
                         case ObjectResult objectResult:
-                            logInfo.ReturnValue = JsonConvert.SerializeObject (objectResult.Value);
+                            logInfo.ReturnValue = JsonConvert.SerializeObject(objectResult.Value);
                             break;
                         case JsonResult jsonResult:
-                            logInfo.ReturnValue = JsonConvert.SerializeObject (jsonResult.Value);
+                            logInfo.ReturnValue = JsonConvert.SerializeObject(jsonResult.Value);
                             break;
                         case ContentResult contentResult:
                             logInfo.ReturnValue = contentResult.Content;
                             break;
                     }
+                    logInfo.ReturnValue = logInfo.ReturnValue.Replace("\\", "");
                 }
                 //保存日志信息
-                //_logService.Add(logInof);
+                await _logService.Add(logInfo);
             }
         }
         /// <summary>
@@ -60,21 +91,25 @@ namespace FytSoa.Application.Filters {
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private bool ShouldSaveAudit (ActionExecutingContext context) {
+        private bool ShouldSaveAudit(ActionExecutingContext context)
+        {
             if (!(context.ActionDescriptor is ControllerActionDescriptor))
                 return false;
             var methodInfo = (context.ActionDescriptor as ControllerActionDescriptor).MethodInfo;
-            if (methodInfo == null) {
+            if (methodInfo == null)
+            {
                 return false;
             }
-            if (!methodInfo.IsPublic) {
+            if (!methodInfo.IsPublic)
+            {
                 return false;
             }
             return false;
         }
     }
 
-    public class AuditLogInfo {
+    public class AuditLogInfo
+    {
         /// <summary>
         /// 调用参数
         /// </summary>

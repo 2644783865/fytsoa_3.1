@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using LinqKit;
+using FytSoa.Infra.Common;
+using FytSoa.Infra.Common.Extensions;
 
 namespace FytSoa.Application.Services
 {
@@ -18,13 +20,68 @@ namespace FytSoa.Application.Services
             _sysLogRepository = sysLogRepository;
         }
 
-        public async Task<IEnumerable<SysLog>> GetAll()
+        /// <summary>
+        /// 查询所有
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<PageResult<SysLog>>> GetPages(PageParam param)
         {
-            //var where = PredicateBuilder.New<SysLog>();
-            //where.And(m=>m.Id==1234566);
+            var result = JResult<PageResult<SysLog>>.Success();
+            try
+            {
+                var where = PredicateBuilder.New<SysLog>(m => true);
+                if (!string.IsNullOrEmpty(param.key))
+                {
+                    where.And(m => m.Method.Contains(param.key) || m.Module.Contains(param.key));
+                }
+                if (!string.IsNullOrEmpty(param.status))
+                {
+                    where.And(m => m.Status == bool.Parse(param.status));
+                }
+                result.Data = await _sysLogRepository.GetPageResult(where, m => m.OperateTime, 1, param.page, param.limit);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return JResult<PageResult<SysLog>>.Error(ex.Message);
+            }
+        }
 
-            //Expression<Func<SysLog, bool>> _where = t => t.Id > 1000;
-            return await _sysLogRepository.GetListAsync();
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<int>> Add(SysLog model)
+        {
+            var result = JResult<int>.Success();
+            try
+            {
+                model.Id = Unique.Id();
+                result.Data = await _sysLogRepository.AddAsync(model);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return JResult<int>.Error(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<int>> Delete(string ids)
+        {
+            var result = JResult<int>.Success();
+            try
+            {
+                result.Data = await _sysLogRepository.DeleteAsync(m => ids.StrToListLong().Contains(m.Id));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return JResult<int>.Error(ex.Message);
+            }
         }
 
         public void Dispose()
@@ -32,6 +89,6 @@ namespace FytSoa.Application.Services
             GC.SuppressFinalize(this);
         }
 
-        
+
     }
 }

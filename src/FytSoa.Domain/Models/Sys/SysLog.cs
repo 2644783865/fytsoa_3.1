@@ -34,6 +34,11 @@ namespace FytSoa.Domain.Models.Sys
         public string Method { get; set; }
 
         /// <summary>
+        /// 参数
+        /// <summary>
+        public string Parameters { get; set; }
+
+        /// <summary>
         /// 操作人
         /// <summary>
         public string OperateUser { get; set; }
@@ -68,6 +73,14 @@ namespace FytSoa.Domain.Models.Sys
         /// <summary>
         public DateTime OperateTime { get; set; } = DateTime.Now;
 
+        /// <summary>
+        /// 执行时长
+        /// <summary>
+        public int ExecutionDuration { get; set; } = 0;
 
+        /// <summary>
+        /// 返回结果
+        /// <summary>
+        public string ReturnValue { get; set; }
     }
 }
