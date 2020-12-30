@@ -38,7 +38,18 @@ namespace FytSoa.Application.Services
                 {
                     where.And(m => m.Status == bool.Parse(param.status));
                 }
-                result.Data = await _sysLogRepository.GetPageResult(where, m => m.OperateTime, 1, param.page, param.limit);
+                result.Data = await _sysLogRepository.GetPageResult(where, m => m.OperateTime, m => new SysLog()
+                {
+                    Id = m.Id,
+                    OperateUser = m.OperateUser,
+                    Address = m.Address,
+                    IP = m.IP,
+                    Browser = m.Browser,
+                    OperateTime = m.OperateTime,
+                    Parameters = m.Parameters,
+                    ExecutionDuration = m.ExecutionDuration,
+                    Message = m.Message
+                }, 1, param.page, param.limit);
                 return result;
             }
             catch (Exception ex)

@@ -10,7 +10,7 @@ namespace FytSoa.Domain.Repository.Interfaces
     /// 定义基本服务
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IBaseRepository<T>  where T : class
+    public interface IBaseRepository<T> where T : class
     {
         #region 添加操作
         /// <summary>
@@ -102,7 +102,18 @@ namespace FytSoa.Domain.Repository.Interfaces
         /// <param name="page">当前页</param>
         /// <param name="limit">每页条数</param>
         /// <returns></returns>
-        Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where,Expression<Func<T, object>> order, int orderEnum,int page,int limit);
+        Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where, Expression<Func<T, object>> order, int orderEnum, int page, int limit);
+
+        /// <summary>
+        /// 分页查询 + 自定义返回结果
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="order">排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <param name="page">当前页</param>
+        /// <param name="limit">每页条数</param>
+        /// <returns></returns>
+        Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where, Expression<Func<T, object>> order, Expression<Func<T, T>> selectColumn, int orderEnum, int page, int limit);
 
         /// <summary>
         /// 分页查询

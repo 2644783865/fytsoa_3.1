@@ -55,11 +55,7 @@
             </template>
           </el-table-column>
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column
-            type="index"
-            width="80"
-            label="序号"
-          ></el-table-column>
+
           <el-table-column
             prop="operateUser"
             label="操作人"
@@ -72,6 +68,21 @@
             width="260"
           ></el-table-column>
           <el-table-column prop="ip" label="Ip" width="180"></el-table-column>
+          <el-table-column
+            prop="executionDuration"
+            label="请求耗时(ms)"
+            width="130"
+          ></el-table-column>
+          <el-table-column label="请求结果" width="100">
+            <template slot-scope="scope">
+              <el-link
+                icon="el-icon-document"
+                :underline="false"
+                type="danger"
+                @click.native.prevent="deleteRow(scope.row)"
+              ></el-link>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="browser"
             label="浏览器信息"

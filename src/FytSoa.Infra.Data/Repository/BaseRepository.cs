@@ -10,7 +10,7 @@ using FytSoa.Infra.Data.Context;
 
 namespace FytSoa.Infra.Data.Repository
 {
-    public class BaseRepository<T>: SugarDbContext, IBaseRepository<T> where T : class, new()
+    public class BaseRepository<T> : SugarDbContext, IBaseRepository<T> where T : class, new()
     {
         public BaseRepository()
         {
@@ -156,8 +156,31 @@ namespace FytSoa.Infra.Data.Repository
             var result = new PageResult<T>();
             RefAsync<int> totalItems = 0;
             result.Items = orderEnum == 1
-                ? await Db.Queryable<T>().Where(where).OrderBy(order,OrderByType.Desc).ToPageListAsync(page, limit, totalItems)
-                : await Db.Queryable<T>().Where(where).OrderBy(order,OrderByType.Asc).ToPageListAsync(page, limit, totalItems);
+                ? await Db.Queryable<T>().Where(where).OrderBy(order, OrderByType.Desc).ToPageListAsync(page, limit, totalItems)
+                : await Db.Queryable<T>().Where(where).OrderBy(order, OrderByType.Asc).ToPageListAsync(page, limit, totalItems);
+            result.CurrentPage = page;
+            result.ItemsPerPage = limit;
+            result.TotalItems = totalItems;
+            result.TotalPages = totalItems != 0 ? (totalItems % page) == 0 ? (totalItems / limit) : (totalItems / limit) + 1 : 0;
+            return result;
+        }
+
+        /// <summary>
+        /// 分页查询 + 自定义返回结果
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="order">排序</param>
+        /// <param name="orderEnum">枚举，1=desc 2=asc</param>
+        /// <param name="page">当前页</param>
+        /// <param name="limit">每页条数</param>
+        /// <returns></returns>
+        public async Task<PageResult<T>> GetPageResult(Expression<Func<T, bool>> where, Expression<Func<T, object>> order, Expression<Func<T, T>> selectColumn, int orderEnum, int page, int limit)
+        {
+            var result = new PageResult<T>();
+            RefAsync<int> totalItems = 0;
+            result.Items = orderEnum == 1
+                ? await Db.Queryable<T>().Where(where).OrderBy(order, OrderByType.Desc).Select(selectColumn).ToPageListAsync(page, limit, totalItems)
+                : await Db.Queryable<T>().Where(where).OrderBy(order, OrderByType.Asc).Select(selectColumn).ToPageListAsync(page, limit, totalItems);
             result.CurrentPage = page;
             result.ItemsPerPage = limit;
             result.TotalItems = totalItems;
@@ -197,7 +220,7 @@ namespace FytSoa.Infra.Data.Repository
         {
             var result = new PageResult<T>();
             RefAsync<int> totalItems = 0;
-            result.Items = await Db.Queryable<T>().Where(where).OrderBy(orderby).ToPageListAsync(page,limit,totalItems);
+            result.Items = await Db.Queryable<T>().Where(where).OrderBy(orderby).ToPageListAsync(page, limit, totalItems);
             result.CurrentPage = page;
             result.ItemsPerPage = limit;
             result.TotalItems = totalItems;
@@ -251,7 +274,7 @@ namespace FytSoa.Infra.Data.Repository
             return await Db.Updateable<T>().SetColumns(columns).Where(where).ExecuteCommandAsync();
         }
 
-       
+
         #endregion
 
         #region 删除操作
