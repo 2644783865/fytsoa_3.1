@@ -13,8 +13,8 @@
           <el-form-item label="请求类型">
             <el-select v-model="param.status" clearable placeholder="根据类型">
               <el-option label="操作" value="1"></el-option>
-              <el-option label="登录" value="0"></el-option>
-              <el-option label="异常" value="0"></el-option>
+              <el-option label="登录" value="2"></el-option>
+              <el-option label="异常" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -45,9 +45,6 @@
                 <el-form-item label="请求参数：">
                   <span>{{ props.row.parameters }}</span>
                 </el-form-item>
-                <el-form-item label="返回结果：">
-                  <span v-html="props.row.returnValue"></span>
-                </el-form-item>
                 <el-form-item label="异常信息：">
                   <span>{{ props.row.message }}</span>
                 </el-form-item>
@@ -73,13 +70,13 @@
             label="请求耗时(ms)"
             width="130"
           ></el-table-column>
-          <el-table-column label="请求结果" width="100">
+          <el-table-column label="请求结果" width="100" align="center">
             <template slot-scope="scope">
               <el-link
                 icon="el-icon-document"
                 :underline="false"
-                type="danger"
-                @click.native.prevent="deleteRow(scope.row)"
+                type="primary"
+                @click="$refs.info.handelInfo(scope.row)"
               ></el-link>
             </template>
           </el-table-column>
@@ -120,11 +117,16 @@
         ></el-pagination>
       </el-col>
     </el-row>
+    <info ref="info"></info>
   </div>
 </template>
 <script>
   import { getList, deletes } from '@/api/sys/logs'
+  import info from './info'
   export default {
+    components: {
+      info,
+    },
     data() {
       return {
         param: {

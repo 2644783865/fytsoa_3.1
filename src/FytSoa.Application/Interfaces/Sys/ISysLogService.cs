@@ -17,6 +17,12 @@ namespace FytSoa.Application.Interfaces
         Task<ApiResult<PageResult<SysLog>>> GetPages(PageParam param);
 
         /// <summary>
+        /// 获得详情
+        /// </summary>
+        /// <returns></returns>
+        Task<ApiResult<SysLog>> GetModel(long id);
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <returns></returns>

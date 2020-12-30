@@ -36,7 +36,7 @@ namespace FytSoa.Application.Services
                 }
                 if (!string.IsNullOrEmpty(param.status))
                 {
-                    where.And(m => m.Status == bool.Parse(param.status));
+                    where.And(m => m.LogType == int.Parse(param.status));
                 }
                 result.Data = await _sysLogRepository.GetPageResult(where, m => m.OperateTime, m => new SysLog()
                 {
@@ -55,6 +55,24 @@ namespace FytSoa.Application.Services
             catch (Exception ex)
             {
                 return JResult<PageResult<SysLog>>.Error(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 获得详情
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<SysLog>> GetModel(long id)
+        {
+            var result = JResult<SysLog>.Success();
+            try
+            {
+                result.Data = await _sysLogRepository.GetModelAsync(m=>m.Id==id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return JResult<SysLog>.Error(ex.Message);
             }
         }
 

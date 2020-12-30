@@ -27,5 +27,8 @@ namespace FytSoa.Services.Api.Controllers
 
         [HttpDelete("{id}")]
         public async Task<ApiResult<int>> Delete(string id) => await _sysLogService.Delete(id);
+
+        [HttpGet("{id}")]
+        public async Task<ApiResult<SysLog>> Get(long id) => await _sysLogService.GetModel(id);
     }
 }
