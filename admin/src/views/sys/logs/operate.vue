@@ -10,6 +10,12 @@
               placeholder="根据关键字搜索"
             ></el-input>
           </el-form-item>
+          <el-form-item label="请求类型">
+            <el-select v-model="param.status" clearable placeholder="根据类型">
+              <el-option label="操作" value="2"></el-option>
+              <el-option label="异常" value="3"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-zoom-in" @click="onSubmit">
               查询
@@ -48,8 +54,19 @@
 
           <el-table-column
             prop="operateUser"
-            label="登录人"
+            label="操作人"
             width="180"
+          ></el-table-column>
+          <el-table-column
+            prop="method"
+            label="请求方式"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="address"
+            label="请求地址"
+            :show-overflow-tooltip="true"
+            width="260"
           ></el-table-column>
           <el-table-column prop="ip" label="Ip" width="180"></el-table-column>
           <el-table-column
@@ -61,25 +78,25 @@
               {{ scope.row.executionDuration }}ms
             </template>
           </el-table-column>
-          <el-table-column prop="browser" label="操作系统" width="150">
+          <el-table-column label="请求结果" width="100" align="center">
             <template slot-scope="scope">
-              {{ resSystem(scope.row.browser) }}
+              <el-link
+                icon="el-icon-document"
+                :underline="false"
+                type="primary"
+                @click="$refs.info.handelInfo(scope.row)"
+              ></el-link>
             </template>
           </el-table-column>
           <el-table-column
             prop="browser"
             label="浏览器信息"
             :show-overflow-tooltip="true"
+            width="280"
           ></el-table-column>
-          <el-table-column label="状态" width="100">
-            <template slot-scope="scope">
-              <el-tag v-if="scope.row.status" type="success">成功</el-tag>
-              <el-tag v-if="!scope.row.status" type="danger">成功</el-tag>
-            </template>
-          </el-table-column>
           <el-table-column
             prop="operateTime"
-            label="登录时间"
+            label="日志时间"
             width="180"
           ></el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
@@ -113,7 +130,6 @@
 </template>
 <script>
   import { getList, deletes } from '@/api/sys/logs'
-  import { getSystem } from '@/utils/index'
   import info from './info'
   export default {
     components: {
@@ -123,7 +139,7 @@
       return {
         param: {
           key: '',
-          status: '1',
+          status: '2',
           limit: 10,
           page: 1,
         },
@@ -146,9 +162,6 @@
         const t = await getList(this.param)
         this.tableData = t.data
         this.loading = false
-      },
-      resSystem(obj) {
-        return getSystem(obj)
       },
       onSubmit() {
         this.init()

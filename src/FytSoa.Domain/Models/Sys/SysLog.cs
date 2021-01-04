@@ -14,7 +14,7 @@ namespace FytSoa.Domain.Models.Sys
     {
 
         /// <summary>
-        /// 日志类型  0=登录  1=操作
+        /// 日志类型  1=登录  2=操作  3=异常
         /// <summary>
         public int LogType { get; set; } = 0;
 

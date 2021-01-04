@@ -35,10 +35,11 @@ namespace FytSoa.Application.Filters
             var arguments = context.ActionArguments;
             //开始计时
             var stopwatch = Stopwatch.StartNew();
+            var module = type != null ? type.FullName : "";
             //构建实体
             var logInfo = new SysLog()
             {
-                LogType = 1,
+                LogType = module.Contains("Sys.LoginController")?1:2,
                 Module = type != null ? type.FullName : "",
                 Method = context.HttpContext.Request.Method,
                 OperateUser = "",
@@ -59,6 +60,7 @@ namespace FytSoa.Application.Filters
             }
             catch (Exception ex)
             {
+                logInfo.LogType = 3;
                 logInfo.Message = ex.Message;
                 throw;
             }

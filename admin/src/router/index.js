@@ -142,7 +142,17 @@ export const asyncRoutes = [
         name: 'logs',
         component: () => import('@/views/sys/logs/index'),
         meta: {
-          title: '日志管理',
+          title: '登录日志',
+          noKeepAlive: true,
+        },
+        children: null,
+      },
+      {
+        path: 'logs/operate',
+        name: 'logs/operate',
+        component: () => import('@/views/sys/logs/operate'),
+        meta: {
+          title: '操作日志',
           noKeepAlive: true,
         },
         children: null,

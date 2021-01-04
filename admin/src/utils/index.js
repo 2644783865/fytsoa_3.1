@@ -260,6 +260,40 @@ export function deepClone(obj) {
 }
 
 /**
+ * @description 返回系统名称
+ * @param m
+ * @returns {system_name}
+ */
+export function getSystem(obj) {
+  let name = '未知'
+  if (obj.indexOf('NT 10.0') > -1) {
+    name = 'Windows 10'
+  }
+  if (obj.indexOf('NT 6.3') > -1) {
+    name = 'Windows 8.1'
+  }
+  if (obj.indexOf('NT 6.2') > -1) {
+    name = 'Windows 8'
+  }
+  if (obj.indexOf('NT 6.1') > -1) {
+    name = 'Windows 7'
+  }
+  if (obj.indexOf('Mac') > -1) {
+    name = 'Mac'
+  }
+  if (obj.indexOf('Linux') > -1) {
+    name = 'Linux'
+  }
+  if (obj.indexOf('Unix') > -1) {
+    name = 'Unix'
+  }
+  if (obj.indexOf('SunOS') > -1) {
+    name = 'SunOS'
+  }
+  return name
+}
+
+/**
  * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
  * @description addEventListener
  * @type {function(...[*]=)}

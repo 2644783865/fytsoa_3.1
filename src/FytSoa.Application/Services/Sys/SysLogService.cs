@@ -44,6 +44,7 @@ namespace FytSoa.Application.Services
                     OperateUser = m.OperateUser,
                     Address = m.Address,
                     IP = m.IP,
+                    Method=m.Method,
                     Browser = m.Browser,
                     OperateTime = m.OperateTime,
                     Parameters = m.Parameters,
