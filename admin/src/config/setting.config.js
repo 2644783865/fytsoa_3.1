@@ -15,10 +15,10 @@ const setting = {
   // 默认的接口地址 如果是开发环境和生产环境走vab-mock-server，当然你也可以选择自己配置成需要的接口地址
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? 'http://192.168.1.10:5008/'
-      : 'http://fytsugar.feiyit.com/',
-  //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）10.1.1.226
-  title: 'fyt-sugar',
+      ? 'http://192.168.120.67:5008/'
+      : 'vab-mock-server',
+  //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）10.1.1.226   192.168.1.10
+  title: 'vue-admin',
   //简写
   abbreviation: 'vab',
   //开发环境端口号
@@ -42,7 +42,7 @@ const setting = {
   //token名称
   tokenName: 'accessToken',
   //token在localStorage、sessionStorage存储的key的名称
-  tokenTableName: 'fyt-sugar',
+  tokenTableName: 'vue-admin-beautiful',
   //token存储位置localStorage sessionStorage
   storage: 'localStorage',
   //token失效回退到登录页时是否记录本次的路由
@@ -70,6 +70,6 @@ const setting = {
   //代码生成机生成在view下的文件夹名称
   templateFolder: 'project',
   //是否显示终端donation打印
-  donation: false,
+  donation: true,
 }
 module.exports = setting
