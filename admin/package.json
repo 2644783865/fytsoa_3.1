@@ -44,6 +44,7 @@
     "core-js": "^3.8.1",
     "dayjs": "^1.9.7",
     "e-icon-picker": "^1.0.15",
+    "el-tree-transfer": "^2.4.7",
     "element-ui": "^2.14.1",
     "js-cookie": "^2.2.1",
     "jsencrypt": "^3.0.0-rc.1",

@@ -274,12 +274,14 @@
       },
       cbkSelect(m) {
         let st = false
-        this.formData.btnFun.forEach(function (item, i) {
-          if (item.id == m.id) {
-            st = true
-            return true
-          }
-        })
+        if (this.formData.btnFun && this.formData.btnFun.length > 0) {
+          this.formData.btnFun.forEach(function (item, i) {
+            if (item.id == m.id) {
+              st = true
+              return true
+            }
+          })
+        }
         return st
       },
       onClose() {

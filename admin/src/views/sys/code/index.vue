@@ -78,15 +78,15 @@
               :data="tableData.items"
               :height="tableAttr.height"
             >
-              <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column
-                type="index"
-                width="80"
-                label="序号"
+                fixed="left"
+                type="selection"
+                width="55"
               ></el-table-column>
               <el-table-column
+                fixed="left"
                 prop="name"
-                width="200"
+                width="150"
                 label="字典名称"
               ></el-table-column>
               <el-table-column

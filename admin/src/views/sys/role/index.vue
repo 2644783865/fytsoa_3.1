@@ -37,6 +37,9 @@
         >
           添加
         </el-button>
+        <el-button type="success" icon="el-icon-finished">
+          为角色分配权限
+        </el-button>
       </el-col>
       <el-col :span="24">
         <el-table

@@ -40,6 +40,9 @@
         <el-button type="danger" icon="el-icon-delete" @click="delSelect">
           删除
         </el-button>
+        <el-button type="success" icon="el-icon-finished" @click="groupRole">
+          为用户分配角色
+        </el-button>
       </el-col>
       <el-col :span="24">
         <el-table
@@ -132,15 +135,18 @@
         ></el-pagination>
       </el-col>
       <modify ref="modify" @complete="onComplete"></modify>
+      <groupRole ref="groupRole"></groupRole>
     </el-row>
   </div>
 </template>
 <script>
   import { getList, deletes } from '@/api/sys/admin'
   import modify from './modify'
+  import groupRole from './groupRole'
   export default {
     components: {
       modify,
+      groupRole,
     },
     data() {
       return {
@@ -219,6 +225,21 @@
             })
           }
         })
+      },
+      groupRole() {
+        const _selectData = this.$refs.multipleTable.selection
+        let ids = []
+        _selectData.forEach((element) => {
+          ids.push(element.id)
+        })
+        if (ids.length == 0) {
+          this.$notify({
+            message: '请选择要授权角色的用户~',
+            type: 'warning',
+          })
+          return
+        }
+        this.$refs.groupRole.handleOpen(ids.join(','))
       },
       handleSizeChange(val) {
         this.param.page = 1
