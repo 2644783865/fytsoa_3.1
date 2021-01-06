@@ -37,9 +37,6 @@
         >
           添加
         </el-button>
-        <el-button type="success" icon="el-icon-finished">
-          为角色分配权限
-        </el-button>
       </el-col>
       <el-col :span="24">
         <el-table
@@ -81,12 +78,20 @@
             label="创建时间"
             width="180"
           ></el-table-column>
-          <el-table-column fixed="right" label="操作" width="160">
+          <el-table-column fixed="right" label="操作" width="260">
             <template slot-scope="scope">
+              <el-link
+                icon="el-icon-finished"
+                :underline="false"
+                type="primary"
+              >
+                分配权限
+              </el-link>
               <el-link
                 icon="el-icon-edit"
                 :underline="false"
                 type="primary"
+                style="margin-left: 15px"
                 @click.native.prevent="$refs.modify.handelModify(scope.row)"
               >
                 修改

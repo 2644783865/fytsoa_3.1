@@ -26,3 +26,11 @@ export function deletes(data) {
     method: 'delete',
   })
 }
+
+export function getMenuList(params) {
+  return request({
+    url: 'api/menu',
+    method: 'get',
+    params,
+  })
+}

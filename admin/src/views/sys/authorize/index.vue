@@ -1,156 +1,127 @@
 <template>
   <div>
-    <el-row class="fyt-search">
-      <el-col :span="24">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-          <el-form-item label="审批人">
-            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域">
-            <el-select v-model="formInline.region" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
-        </el-form>
+    <el-row>
+      <el-col class="code-left">
+        <div class="title">
+          <i class="el-icon-c-scale-to-original"></i>
+          角色组
+        </div>
+        <div class="cur-tree">
+          <el-tree
+            :data="treeData"
+            node-key="id"
+            default-expand-all
+            :expand-on-click-node="false"
+            @node-click="columnnode"
+          ></el-tree>
+        </div>
       </el-col>
-    </el-row>
-    <el-row style="padding: 15px">
-      <el-col :span="24" class="fyt-tools">
-        <el-button type="primary" icon="el-icon-edit">添加</el-button>
-        <el-button type="danger" icon="el-icon-edit">删除</el-button>
-      </el-col>
-      <el-col :span="24">
-        <el-table :data="tableData" :height="tableAttr.height">
-          <el-table-column
-            fixed
-            prop="date"
-            label="日期"
-            width="200"
-          ></el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="province"
-            label="省份"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="city"
-            label="市区"
-            width="120"
-          ></el-table-column>
-          <el-table-column prop="address" label="地址"></el-table-column>
-          <el-table-column
-            prop="zip"
-            label="邮编"
-            width="120"
-          ></el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
-            <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
-              >
-                移除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
+      <el-col class="code-right"></el-col>
     </el-row>
   </div>
 </template>
 <script>
+  import { getList, getMenuList } from '@/api/sys/role'
+  import { changeTree } from '@/utils/treeTool'
   export default {
     data() {
       return {
-        formInline: {
-          user: '',
-          region: '',
+        param: {
+          key: '',
         },
-        tableAttr: {
-          height: 300,
-        },
-        tableData: [
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            province: '上海',
-            city: '普陀区',
-            address: '上海市普陀区金沙江路 1518 弄',
-            zip: 200333,
-          },
-        ],
+        treeData: [],
       }
     },
-    created() {
-      this.tableAttr.height = window.innerHeight - 275
+    created() {},
+    mounted() {
+      this.init()
     },
-    mounted() {},
     methods: {
+      async init() {
+        const role = await getList(this.param)
+        let roleArr = []
+        role.data.forEach(function (m, i) {
+          roleArr.push({
+            id: m.id,
+            pid: m.parentId,
+            label: m.name,
+            parentId: m.parentId,
+          })
+        })
+        this.treeData = changeTree(roleArr)
+      },
+      columnnode(data, node, e) {
+        console.log(data)
+      },
       onSubmit() {
         console.log('submit!')
-      },
-      deleteRow(index, rows) {
-        rows.splice(index, 1)
       },
     },
   }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .code-left {
+    width: 260px !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    float: inherit;
+    background-color: #edf5ff;
+    .title {
+      height: 50px;
+      line-height: 50px;
+      padding-left: 20px;
+      font-weight: bold;
+      background-color: #dee5ef;
+    }
+  }
+  .code-left::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    left: -19px;
+    top: 0px;
+    background-color: #f6f8f9;
+  }
+  .code-right {
+    left: 260px;
+    position: relative;
+    width: calc(100% - 260px);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    float: inherit;
+  }
+</style>
+<style>
+  .cur-tree .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+  .cur-tree .el-tree {
+    background: transparent;
+  }
+  .el-tree-node__content {
+    height: 35px;
+  }
+  .cur-tree .tool {
+    display: inline-block;
+    padding-right: 10px;
+    position: relative;
+    z-index: 10;
+  }
+  .cur-tree .tool button {
+    margin-left: 10px;
+    font-size: 16px;
+  }
+  .el-icon-c-scale-to-original {
+    font-size: 18px;
+    position: relative;
+    top: 2px;
+  }
+</style>
