@@ -70,6 +70,7 @@
             prop="browser"
             label="浏览器信息"
             :show-overflow-tooltip="true"
+            min-width="200"
           ></el-table-column>
           <el-table-column label="状态" width="100">
             <template slot-scope="scope">
