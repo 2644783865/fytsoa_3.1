@@ -29,18 +29,19 @@
             node-key="id"
             default-expand-all
             :render-content="renderContent"
-            @check-change="handleCheckChange"
           ></el-tree>
         </div>
         <div class="footer-btn">
-          <el-button type="primary" round>保存授权</el-button>
+          <el-button type="primary" round @click="saveAuthorize">
+            保存授权
+          </el-button>
         </div>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
-  import { getList, getMenuList } from '@/api/sys/role'
+  import { getList, getMenuList, addAuthorize } from '@/api/sys/role'
   import { changeTree } from '@/utils/treeTool'
   export default {
     data() {
@@ -49,6 +50,7 @@
           key: '',
         },
         treeData: [],
+        selectRole: {},
         menuTree: [],
         fullHeight: window.innerHeight - 125,
         menuArray: [],
@@ -82,7 +84,7 @@
         //console.log(m)
       },
       handleCheckChange(data, checked, indeterminate) {
-        //console.log(data, checked, indeterminate)
+        //console.log(data, checked, indeterminate)  @check-change="handleCheckChange"
         let _this = this
         if (checked) {
           data.btns.forEach((item) => {
@@ -138,8 +140,46 @@
         this.menuArray = menuArr
         this.menuTree = changeTree(menuArr)
       },
-      columnnode(data, node, e) {
+      async saveAuthorize() {
+        var nodes = this.$refs.tree.getCheckedNodes()
+        if (!this.selectRole.id) {
+          this.$notify({
+            message: '请选择要授权的角色信息~',
+            type: 'warning',
+          })
+          return
+        }
+        if (nodes.length == 0) {
+          this.$notify({
+            message: '请勾选授权的菜单信息~',
+            type: 'warning',
+          })
+          return
+        }
+        let _menus = []
+        nodes.forEach((item) => {
+          _menus.push({ menuId: item.id, btnFun: item.btns })
+        })
+        var data = { roleId: this.selectRole.id, menus: _menus }
         console.log(data)
+        const res = await addAuthorize(data)
+        this.loading = false
+        if (res.code == 200) {
+          this.$notify({
+            message: '授权成功',
+            type: 'success',
+          })
+        } else {
+          this.$notify({
+            message: res.message,
+            type: 'error',
+          })
+        }
+      },
+      columnnode(data, node, e) {
+        if (!data.children) {
+          this.selectRole = data
+        }
       },
       onSubmit() {
         console.log('submit!')
@@ -197,6 +237,7 @@
     position: absolute;
     width: 100%;
     text-align: center;
+    z-index: 10;
     bottom: 0px;
     border-top: 1px solid #e6e7e8;
     padding-top: 10px;

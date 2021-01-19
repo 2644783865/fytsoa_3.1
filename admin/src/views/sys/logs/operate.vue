@@ -186,7 +186,7 @@
       },
       delSubmit(parm) {
         var _this = this
-        this.$confirm('确认要删除当前的岗位吗？', '提示', {
+        this.$confirm('确认要删除当前的信息吗？', '提示', {
           type: 'warning',
         }).then(async () => {
           this.loading = true

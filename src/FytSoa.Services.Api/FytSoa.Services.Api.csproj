@@ -25,9 +25,4 @@
     <ProjectReference Include="..\FytSoa.Infra.CrossCutting\FytSoa.Infra.CrossCutting.csproj" />
     <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Controllers\Sys\" />
-  </ItemGroup>
 </Project>

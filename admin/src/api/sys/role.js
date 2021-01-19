@@ -34,3 +34,10 @@ export function getMenuList(params) {
     params,
   })
 }
+export function addAuthorize(data) {
+  return request({
+    url: 'api/authority',
+    method: 'post',
+    data,
+  })
+}

@@ -32,7 +32,8 @@ namespace FytSoa.Domain.Models.Sys {
         /// <summary>
         /// 按钮功能组
         /// <summary>
-        public string BtnFun { get; set; }
+        [SugarColumn(IsJson = true)]
+        public List<SysMenuBtnFun> BtnFun { get; set; }
 
         /// <summary>
         /// 授权类型1=角色-菜单 2=用户-角色 3=角色-菜单-按钮功能
