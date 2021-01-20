@@ -41,3 +41,9 @@ export function addAuthorize(data) {
     data,
   })
 }
+export function authorize(data) {
+  return request({
+    url: 'api/authority/' + data,
+    method: 'get',
+  })
+}

@@ -1,5 +1,6 @@
 ﻿using FytSoa.Application.Interfaces;
 using FytSoa.Application.ViewModels;
+using FytSoa.Domain.Models.Sys;
 using FytSoa.Infra.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,8 @@ namespace FytSoa.Services.Api.Controllers.Sys
 
         [HttpPost]
         public async Task<ApiResult<int>> Post([FromBody] AuthorityMenuParam authorityMenu) => await _authorityService.AddMenu(authorityMenu);
+
+        [HttpGet("{id}")]
+        public async Task<ApiResult<List<SysAuthority>>> Get(string id) => await _authorityService.GetAuthority(id);
     }
 }

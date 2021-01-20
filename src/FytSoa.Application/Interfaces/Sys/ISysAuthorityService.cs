@@ -13,5 +13,11 @@ namespace FytSoa.Application.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<ApiResult<int>> AddMenu(AuthorityMenuParam authorityMenu);
+
+        /// <summary>
+        /// 根据角色获得权限
+        /// </summary>
+        /// <returns></returns>
+        Task<ApiResult<List<SysAuthority>>> GetAuthority(string roleId);
     }
 }

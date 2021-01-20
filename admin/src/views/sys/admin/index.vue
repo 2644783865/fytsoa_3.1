@@ -66,7 +66,7 @@
           <el-table-column
             prop="fullName"
             fixed="left"
-            width="100"
+            min-width="150"
             label="姓名"
           ></el-table-column>
           <el-table-column

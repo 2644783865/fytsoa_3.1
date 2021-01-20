@@ -44,6 +44,7 @@ namespace FytSoa.Application.Services {
             var result = JResult<int>.Success ();
             try {
                 model.Id = Unique.Id ();
+                model.LoginPassWord = Security.DES3Encrypt.EncryptString(model.LoginPassWord);
                 result.Data = await _thisRepository.AddAsync (model);
                 return result;
             } catch (Exception ex) {
@@ -58,6 +59,7 @@ namespace FytSoa.Application.Services {
         public async Task<ApiResult<int>> Update (SysAdmin model) {
             var result = JResult<int>.Success ();
             try {
+                model.LoginPassWord = Security.DES3Encrypt.EncryptString(model.LoginPassWord);
                 result.Data = await _thisRepository.UpdateAsync (model);
                 return result;
             } catch (Exception ex) {

@@ -20,6 +20,7 @@
         <div class="title">
           <i class="el-icon-document-copy"></i>
           菜单列表
+          <span v-if="selectRole.id">【{{ selectRole.label }}】</span>
         </div>
         <div class="menu-wall">
           <el-tree
@@ -32,7 +33,12 @@
           ></el-tree>
         </div>
         <div class="footer-btn">
-          <el-button type="primary" round @click="saveAuthorize">
+          <el-button
+            type="primary"
+            :disabled="btnDisable"
+            round
+            @click="saveAuthorize"
+          >
             保存授权
           </el-button>
         </div>
@@ -41,7 +47,7 @@
   </div>
 </template>
 <script>
-  import { getList, getMenuList, addAuthorize } from '@/api/sys/role'
+  import { getList, getMenuList, addAuthorize, authorize } from '@/api/sys/role'
   import { changeTree } from '@/utils/treeTool'
   export default {
     data() {
@@ -50,10 +56,11 @@
           key: '',
         },
         treeData: [],
-        selectRole: {},
+        selectRole: { id: '' },
         menuTree: [],
         fullHeight: window.innerHeight - 125,
         menuArray: [],
+        btnDisable: true,
       }
     },
     created() {},
@@ -161,7 +168,6 @@
           _menus.push({ menuId: item.id, btnFun: item.btns })
         })
         var data = { roleId: this.selectRole.id, menus: _menus }
-        console.log(data)
         const res = await addAuthorize(data)
         this.loading = false
         if (res.code == 200) {
@@ -176,9 +182,21 @@
           })
         }
       },
-      columnnode(data, node, e) {
+      async columnnode(data, node, e) {
         if (!data.children) {
           this.selectRole = data
+          this.btnDisable = false
+          const model = await authorize(data.id)
+          if (model.code == 200) {
+            var currentArr = []
+            model.data.forEach((item) => {
+              currentArr.push({ id: item.menuId, btns: item.btnFun })
+            })
+          }
+          this.$refs.tree.setCheckedNodes(currentArr)
+        } else {
+          this.selectRole = {}
+          this.btnDisable = true
         }
       },
       onSubmit() {

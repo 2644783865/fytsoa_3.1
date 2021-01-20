@@ -103,7 +103,7 @@ namespace FytSoa.Infra.Data.Repository
         {
             var query = Db.Queryable<T>()
                         .Where(where)
-                        .OrderBy(order);
+                        .OrderByIF(!string.IsNullOrEmpty(order),order);
             return await query.ToListAsync();
         }
 

@@ -46,6 +46,25 @@ namespace FytSoa.Application.Services
             }
         }
 
+        /// <summary>
+        /// 根据角色获得权限
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResult<List<SysAuthority>>> GetAuthority(string roleId)
+        {
+            var result = JResult<List<SysAuthority>>.Success();
+            try
+            {
+                var id = long.Parse(roleId);
+                result.Data = await _thisRepository.GetListAsync(m=>m.RoleId==id,"");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return JResult<List<SysAuthority>>.Error(ex.Message);
+            }
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
